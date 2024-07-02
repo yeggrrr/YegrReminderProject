@@ -6,8 +6,10 @@
 //
 
 import UIKit
+import SnapKit
 
 class ListViewController: UIViewController {
+    let listTableView = UITableView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -15,18 +17,61 @@ class ListViewController: UIViewController {
         configureHierarchy()
         configureLayout()
         configureUI()
+        configureTableView()
     }
     
     func configureHierarchy() {
-        
+        view.addSubview(listTableView)
     }
     
     func configureLayout() {
-        
+        listTableView.snp.makeConstraints {
+            $0.edges.equalTo(view.safeAreaLayoutGuide)
+        }
     }
     
     func configureUI() {
         view.backgroundColor = .white
+        
+        let left = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(plusButtonClicked))
+        navigationItem.leftBarButtonItem = left
+        navigationItem.leftBarButtonItem?.tintColor = .black
+        
+    }
+    
+    func configureTableView() {
+        listTableView.delegate = self
+        listTableView.dataSource = self
+        listTableView.register(ListTableViewCell.self, forCellReuseIdentifier: ListTableViewCell.id)
+    }
+    
+    @objc func plusButtonClicked() {
+        print(#function)
+        let registrationVC = RegistrationViewController()
+        present(registrationVC, animated: true)
+    }
+}
+
+extension ListViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 30
+    }
+    
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return "전체"
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 120
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 10
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: ListTableViewCell.id, for: indexPath) as? ListTableViewCell else { return UITableViewCell() }
+        return cell
     }
 }
 
