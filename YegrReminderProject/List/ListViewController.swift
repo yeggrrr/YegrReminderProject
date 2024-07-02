@@ -50,9 +50,9 @@ final class ListViewController: UIViewController {
     }
     
     @objc func plusButtonClicked() {
-        print(#function)
         let registrationVC = RegistrationViewController()
-        present(registrationVC, animated: true)
+        let registrationNav = UINavigationController(rootViewController: registrationVC)
+        present(registrationNav, animated: true)
     }
     
     @objc func filterButtonClicked() {
@@ -82,5 +82,7 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
         cell.backgroundColor = .systemBackground
         return cell
     }
+    
+    
 }
 
