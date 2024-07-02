@@ -11,10 +11,9 @@ import RealmSwift
 
 class RegistrationViewController: UIViewController {
     let tableview = UITableView(frame: .zero, style: .insetGrouped)
-    let realm = try! Realm()
     
-    var titleText: String?
-    var memoText: String?
+    let realm = try! Realm()
+    weak var delegate: DismissDelegate?
     
     enum AddOption: Int, CaseIterable {
         case deadline
@@ -75,20 +74,23 @@ class RegistrationViewController: UIViewController {
     }
     
     @objc func cancelButtonClicked() {
-        dismiss(animated: true)
+        dismiss(animated: true) {
+            self.delegate?.updateDataAfterDismiss()
+        }
     }
     
     @objc func addButtonClicked() {
-        print(#function)
         guard let cell = tableview.cellForRow(at: IndexPath(row: 0, section: 0)) as? TitleMemoTableViewCell else { return }
         guard let titleText = cell.titleTextField.text else { return }
 
         if !titleText.isEmpty {
             let data = TodoTable(memoTitle: titleText, Content: nil, deadline: nil, tag: nil, priority: 1, image: nil, isDone: false)
+            
             try! realm.write {
                 realm.add(data)
-                print("Succed")
-                dismiss(animated: true) 
+                dismiss(animated: true) {
+                    self.delegate?.updateDataAfterDismiss()
+                }
             }
         }
     }
@@ -98,30 +100,13 @@ class RegistrationViewController: UIViewController {
         navigationItem.rightBarButtonItem?.isEnabled = !text.isEmpty
     }
 }
-
-extension RegistrationViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        if indexPath.section == 0 {
-            return 150
-        } else {
-            return 50
-        }
-    }
-    
+extension RegistrationViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return AddOption.allCases.count + 1
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
-    }
-    
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return .leastNormalMagnitude
-    }
-    
-    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        return UIView()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -138,4 +123,26 @@ extension RegistrationViewController: UITableViewDelegate, UITableViewDataSource
             return cell
         }
     }
+}
+
+extension RegistrationViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == 0 {
+            return 150
+        } else {
+            return 50
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return .leastNormalMagnitude
+    }
+    
+    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
+        return UIView()
+    }
+}
+
+protocol DismissDelegate: AnyObject {
+    func updateDataAfterDismiss()
 }

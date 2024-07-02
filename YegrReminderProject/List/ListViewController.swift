@@ -11,9 +11,9 @@ import RealmSwift
 
 final class ListViewController: UIViewController {
     private let listTableView = UITableView()
-
-    var list: Results<TodoTable>!
+    
     let realm = try! Realm()
+    var list: Results<TodoTable>!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,12 +22,6 @@ final class ListViewController: UIViewController {
         configureLayout()
         configureUI()
         configureTableView()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        listTableView.reloadData()
     }
     
     private func configureHierarchy() {
@@ -51,9 +45,11 @@ final class ListViewController: UIViewController {
         navigationItem.rightBarButtonItem = right
         navigationItem.rightBarButtonItem?.tintColor = .label
         
-        // tableView
+        fetch()
+    }
+    
+    private func fetch() {
         list = realm.objects(TodoTable.self)
-        print(realm.configuration.fileURL)
     }
     
     private func configureTableView() {
@@ -64,8 +60,8 @@ final class ListViewController: UIViewController {
     
     @objc func plusButtonClicked() {
         let registrationVC = RegistrationViewController()
+        registrationVC.delegate = self
         let registrationNav = UINavigationController(rootViewController: registrationVC)
-        registrationNav.modalPresentationStyle = .fullScreen
         present(registrationNav, animated: true)
     }
     
@@ -74,7 +70,23 @@ final class ListViewController: UIViewController {
     }
 }
 
-extension ListViewController: UITableViewDelegate, UITableViewDataSource {
+extension ListViewController: UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return list.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: ListTableViewCell.id, for: indexPath) as? ListTableViewCell else { return UITableViewCell() }
+        let data = list[indexPath.row]
+        cell.titleLabel.text = data.memoTitle
+        cell.memoLabel.text = data.Content
+        cell.deadlineLabel.text = data.deadline
+        cell.backgroundColor = .systemBackground
+        return cell
+    }
+}
+
+extension ListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 30
     }
@@ -86,22 +98,10 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 120
     }
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return list.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: ListTableViewCell.id, for: indexPath) as? ListTableViewCell else { return UITableViewCell() }
-        cell.backgroundColor = .systemBackground
-        
-        let data = list[indexPath.row]
-        
-        cell.titleLabel.text = data.memoTitle
-        cell.memoLabel.text = data.Content
-        cell.deadlineLabel.text = data.deadline
-        
-        return cell
-    }
 }
 
+extension ListViewController: DismissDelegate {
+    func updateDataAfterDismiss() {
+        listTableView.reloadData()
+    }
+}
