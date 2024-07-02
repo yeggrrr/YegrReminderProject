@@ -67,6 +67,28 @@ final class ListViewController: UIViewController {
     
     @objc func filterButtonClicked() {
         print(#function)
+        let alert = UIAlertController(title: "정렬 & 핉터", message: nil, preferredStyle: .actionSheet)
+        let deadline = UIAlertAction(title: "마감일 순으로 보기", style: .default) { _ in
+            self.list = self.realm.objects(TodoTable.self).sorted(byKeyPath: "deadline", ascending: true)
+            self.listTableView.reloadData()
+        }
+        
+        let title = UIAlertAction(title: "제목 순으로 보기", style: .default) { _ in
+            self.list = self.realm.objects(TodoTable.self).sorted(byKeyPath: "memoTitle", ascending: true)
+            self.listTableView.reloadData()
+        }
+        
+        let priority = UIAlertAction(title: "우선순위 낮은 순으로 보기", style: .default) { _ in
+            self.list = self.realm.objects(TodoTable.self).sorted(byKeyPath: "priority", ascending: true)
+            self.listTableView.reloadData()
+        }
+        
+        alert.addAction(deadline)
+        alert.addAction(title)
+        alert.addAction(priority)
+        
+        present(alert, animated: true)
+        
     }
 }
 
