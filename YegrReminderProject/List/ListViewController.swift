@@ -84,6 +84,27 @@ extension ListViewController: UITableViewDataSource {
         cell.backgroundColor = .systemBackground
         return cell
     }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let delete = UIContextualAction(style: .normal, title: "삭제") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
+            try! self.realm.write {
+                self.realm.delete(self.list[indexPath.row])
+                self.listTableView.reloadData()
+            }
+            
+            success(true)
+        }
+    
+        let edit = UIContextualAction(style: .normal, title: "편집") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
+            print("편집 클릭 됨")
+            success(true)
+        }
+        
+        delete.backgroundColor = .systemPink
+        edit.backgroundColor = .systemYellow
+        
+        return UISwipeActionsConfiguration(actions:[delete, edit])
+    }
 }
 
 extension ListViewController: UITableViewDelegate {
