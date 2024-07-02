@@ -9,21 +9,27 @@
 /* Begin PBXBuildFile section */
 		686053152C33E43C00D60EA0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 686053142C33E43C00D60EA0 /* AppDelegate.swift */; };
 		686053172C33E43C00D60EA0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 686053162C33E43C00D60EA0 /* SceneDelegate.swift */; };
-		686053192C33E43C00D60EA0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 686053182C33E43C00D60EA0 /* ViewController.swift */; };
+		686053192C33E43C00D60EA0 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 686053182C33E43C00D60EA0 /* ListViewController.swift */; };
 		6860531E2C33E43E00D60EA0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6860531D2C33E43E00D60EA0 /* Assets.xcassets */; };
 		686053212C33E43E00D60EA0 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 686053202C33E43E00D60EA0 /* Base */; };
 		686053292C33E57200D60EA0 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 686053282C33E57200D60EA0 /* .gitignore */; };
+		6860532B2C33EBF400D60EA0 /* ListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6860532A2C33EBF400D60EA0 /* ListTableViewCell.swift */; };
+		6860532F2C33EC8200D60EA0 /* ReusableProtocol+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6860532E2C33EC8200D60EA0 /* ReusableProtocol+.swift */; };
+		686053322C33ED1000D60EA0 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 686053312C33ED1000D60EA0 /* RealmSwift */; };
+		686053352C33ED1B00D60EA0 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 686053342C33ED1B00D60EA0 /* SnapKit */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		686053112C33E43C00D60EA0 /* YegrReminderProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YegrReminderProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		686053142C33E43C00D60EA0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		686053162C33E43C00D60EA0 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		686053182C33E43C00D60EA0 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		686053182C33E43C00D60EA0 /* ListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListViewController.swift; sourceTree = "<group>"; };
 		6860531D2C33E43E00D60EA0 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		686053202C33E43E00D60EA0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		686053222C33E43E00D60EA0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		686053282C33E57200D60EA0 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		6860532A2C33EBF400D60EA0 /* ListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewCell.swift; sourceTree = "<group>"; };
+		6860532E2C33EC8200D60EA0 /* ReusableProtocol+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReusableProtocol+.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +37,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				686053322C33ED1000D60EA0 /* RealmSwift in Frameworks */,
+				686053352C33ED1B00D60EA0 /* SnapKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -59,12 +67,30 @@
 			children = (
 				686053142C33E43C00D60EA0 /* AppDelegate.swift */,
 				686053162C33E43C00D60EA0 /* SceneDelegate.swift */,
-				686053182C33E43C00D60EA0 /* ViewController.swift */,
 				6860531D2C33E43E00D60EA0 /* Assets.xcassets */,
 				6860531F2C33E43E00D60EA0 /* LaunchScreen.storyboard */,
+				6860532D2C33EC6A00D60EA0 /* Extension */,
+				6860532C2C33EBF900D60EA0 /* List */,
 				686053222C33E43E00D60EA0 /* Info.plist */,
 			);
 			path = YegrReminderProject;
+			sourceTree = "<group>";
+		};
+		6860532C2C33EBF900D60EA0 /* List */ = {
+			isa = PBXGroup;
+			children = (
+				686053182C33E43C00D60EA0 /* ListViewController.swift */,
+				6860532A2C33EBF400D60EA0 /* ListTableViewCell.swift */,
+			);
+			path = List;
+			sourceTree = "<group>";
+		};
+		6860532D2C33EC6A00D60EA0 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				6860532E2C33EC8200D60EA0 /* ReusableProtocol+.swift */,
+			);
+			path = Extension;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -83,6 +109,10 @@
 			dependencies = (
 			);
 			name = YegrReminderProject;
+			packageProductDependencies = (
+				686053312C33ED1000D60EA0 /* RealmSwift */,
+				686053342C33ED1B00D60EA0 /* SnapKit */,
+			);
 			productName = YegrReminderProject;
 			productReference = 686053112C33E43C00D60EA0 /* YegrReminderProject.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +141,10 @@
 				Base,
 			);
 			mainGroup = 686053082C33E43C00D60EA0;
+			packageReferences = (
+				686053302C33ED1000D60EA0 /* XCRemoteSwiftPackageReference "realm-swift" */,
+				686053332C33ED1B00D60EA0 /* XCRemoteSwiftPackageReference "SnapKit" */,
+			);
 			productRefGroup = 686053122C33E43C00D60EA0 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -138,7 +172,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				686053192C33E43C00D60EA0 /* ViewController.swift in Sources */,
+				686053192C33E43C00D60EA0 /* ListViewController.swift in Sources */,
+				6860532B2C33EBF400D60EA0 /* ListTableViewCell.swift in Sources */,
+				6860532F2C33EC8200D60EA0 /* ReusableProtocol+.swift in Sources */,
 				686053152C33E43C00D60EA0 /* AppDelegate.swift in Sources */,
 				686053172C33E43C00D60EA0 /* SceneDelegate.swift in Sources */,
 			);
@@ -361,6 +397,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		686053302C33ED1000D60EA0 /* XCRemoteSwiftPackageReference "realm-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/realm/realm-swift.git";
+			requirement = {
+				kind = exactVersion;
+				version = 10.52.1;
+			};
+		};
+		686053332C33ED1B00D60EA0 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		686053312C33ED1000D60EA0 /* RealmSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 686053302C33ED1000D60EA0 /* XCRemoteSwiftPackageReference "realm-swift" */;
+			productName = RealmSwift;
+		};
+		686053342C33ED1B00D60EA0 /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 686053332C33ED1B00D60EA0 /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 686053092C33E43C00D60EA0 /* Project object */;
 }
