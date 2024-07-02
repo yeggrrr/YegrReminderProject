@@ -65,11 +65,11 @@ final class ListTableViewCell: UITableViewCell {
         deadlineLabel.text = "마감일"
         
         checkButton.setImage(UIImage(systemName: "circle"), for: .normal)
-        checkButton.tintColor = .black
+        checkButton.tintColor = .label
         
-        titleLabel.setUI(txtColor: .black, fontStyle: .systemFont(ofSize: 17, weight: .semibold), txtAlignment: .left)
-        memoLabel.setUI(txtColor: .darkGray, fontStyle: .systemFont(ofSize: 16, weight: .regular), txtAlignment: .left)
-        deadlineLabel.setUI(txtColor: .lightGray, fontStyle: .systemFont(ofSize: 13, weight: .regular), txtAlignment: .right)
+        titleLabel.setUI(txtColor: .label, fontStyle: .systemFont(ofSize: 17, weight: .semibold), txtAlignment: .left)
+        memoLabel.setUI(txtColor: .lightGray, fontStyle: .systemFont(ofSize: 16, weight: .regular), txtAlignment: .left)
+        deadlineLabel.setUI(txtColor: .lightGray, fontStyle: .systemFont(ofSize: 14, weight: .regular), txtAlignment: .right)
         
         contentsStackView.axis = .vertical
         contentsStackView.spacing = 1
