@@ -18,6 +18,7 @@
 		686053322C33ED1000D60EA0 /* RealmSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 686053312C33ED1000D60EA0 /* RealmSwift */; };
 		686053352C33ED1B00D60EA0 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 686053342C33ED1B00D60EA0 /* SnapKit */; };
 		686053382C33F50800D60EA0 /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 686053372C33F50800D60EA0 /* RegistrationViewController.swift */; };
+		6860533A2C33FA9D00D60EA0 /* UILabel+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 686053392C33FA9D00D60EA0 /* UILabel+.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		6860532A2C33EBF400D60EA0 /* ListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListTableViewCell.swift; sourceTree = "<group>"; };
 		6860532E2C33EC8200D60EA0 /* ReusableProtocol+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ReusableProtocol+.swift"; sourceTree = "<group>"; };
 		686053372C33F50800D60EA0 /* RegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
+		686053392C33FA9D00D60EA0 /* UILabel+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -92,6 +94,7 @@
 			isa = PBXGroup;
 			children = (
 				6860532E2C33EC8200D60EA0 /* ReusableProtocol+.swift */,
+				686053392C33FA9D00D60EA0 /* UILabel+.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -187,6 +190,7 @@
 				686053192C33E43C00D60EA0 /* ListViewController.swift in Sources */,
 				6860532B2C33EBF400D60EA0 /* ListTableViewCell.swift in Sources */,
 				6860532F2C33EC8200D60EA0 /* ReusableProtocol+.swift in Sources */,
+				6860533A2C33FA9D00D60EA0 /* UILabel+.swift in Sources */,
 				686053152C33E43C00D60EA0 /* AppDelegate.swift in Sources */,
 				686053172C33E43C00D60EA0 /* SceneDelegate.swift in Sources */,
 			);

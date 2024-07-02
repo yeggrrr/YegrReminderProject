@@ -8,8 +8,8 @@
 import UIKit
 import SnapKit
 
-class ListViewController: UIViewController {
-    let listTableView = UITableView()
+final class ListViewController: UIViewController {
+    private let listTableView = UITableView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,26 +20,30 @@ class ListViewController: UIViewController {
         configureTableView()
     }
     
-    func configureHierarchy() {
+    private func configureHierarchy() {
         view.addSubview(listTableView)
     }
     
-    func configureLayout() {
+    private func configureLayout() {
         listTableView.snp.makeConstraints {
             $0.edges.equalTo(view.safeAreaLayoutGuide)
         }
     }
     
-    func configureUI() {
+    private func configureUI() {
         view.backgroundColor = .white
         
         let left = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(plusButtonClicked))
         navigationItem.leftBarButtonItem = left
         navigationItem.leftBarButtonItem?.tintColor = .black
         
+        let right = UIBarButtonItem(image: UIImage(systemName: "ellipsis.circle"), style: .plain, target: self, action: #selector(filterButtonClicked))
+        navigationItem.rightBarButtonItem = right
+        navigationItem.rightBarButtonItem?.tintColor = .black
+        
     }
     
-    func configureTableView() {
+    private func configureTableView() {
         listTableView.delegate = self
         listTableView.dataSource = self
         listTableView.register(ListTableViewCell.self, forCellReuseIdentifier: ListTableViewCell.id)
@@ -49,6 +53,10 @@ class ListViewController: UIViewController {
         print(#function)
         let registrationVC = RegistrationViewController()
         present(registrationVC, animated: true)
+    }
+    
+    @objc func filterButtonClicked() {
+        print(#function)
     }
 }
 
