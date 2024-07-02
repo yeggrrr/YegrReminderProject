@@ -60,10 +60,6 @@ final class ListTableViewCell: UITableViewCell {
     }
     
     private func configureUI() {
-        titleLabel.text = "제목"
-        memoLabel.text = "메모"
-        deadlineLabel.text = "마감일"
-        
         checkButton.setImage(UIImage(systemName: "circle"), for: .normal)
         checkButton.tintColor = .label
         
