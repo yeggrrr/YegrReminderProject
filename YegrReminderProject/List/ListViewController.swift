@@ -7,10 +7,14 @@
 
 import UIKit
 import SnapKit
+import RealmSwift
 
 final class ListViewController: UIViewController {
     private let listTableView = UITableView()
 
+    var list: Results<TodoTable>!
+    let realm = try! Realm()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -18,6 +22,12 @@ final class ListViewController: UIViewController {
         configureLayout()
         configureUI()
         configureTableView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        listTableView.reloadData()
     }
     
     private func configureHierarchy() {
@@ -41,6 +51,9 @@ final class ListViewController: UIViewController {
         navigationItem.rightBarButtonItem = right
         navigationItem.rightBarButtonItem?.tintColor = .label
         
+        // tableView
+        list = realm.objects(TodoTable.self)
+        print(realm.configuration.fileURL)
     }
     
     private func configureTableView() {
@@ -52,6 +65,7 @@ final class ListViewController: UIViewController {
     @objc func plusButtonClicked() {
         let registrationVC = RegistrationViewController()
         let registrationNav = UINavigationController(rootViewController: registrationVC)
+        registrationNav.modalPresentationStyle = .fullScreen
         present(registrationNav, animated: true)
     }
     
@@ -74,15 +88,20 @@ extension ListViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        return list.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ListTableViewCell.id, for: indexPath) as? ListTableViewCell else { return UITableViewCell() }
         cell.backgroundColor = .systemBackground
+        
+        let data = list[indexPath.row]
+        
+        cell.titleLabel.text = data.memoTitle
+        cell.memoLabel.text = data.Content
+        cell.deadlineLabel.text = data.deadline
+        
         return cell
     }
-    
-    
 }
 
