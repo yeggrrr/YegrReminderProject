@@ -12,6 +12,8 @@ class DetailViewController: UIViewController {
     let detailView = DetailView()
     let xButton = UIButton()
     
+    var todo: TodoTable?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -51,6 +53,29 @@ class DetailViewController: UIViewController {
         detailView.layer.cornerRadius = 10
         detailView.layer.borderWidth = 3
         detailView.layer.borderColor = UIColor.white.cgColor
+        
+        guard let todo = todo else { return }
+        detailView.titleLabel.text = todo.memoTitle
+        detailView.memoLabel.text = todo.content
+        
+        if let deadline = todo.deadline {
+            detailView.deadlineLabel.text = DateFormatter.deadlineDateFormatter.string(from: deadline)
+        } else {
+            detailView.deadlineLabel.text = "-"
+        }
+        
+        if let tag = todo.tag {
+            detailView.tagLabel.text = "#\(tag)"
+        } else {
+            detailView.tagLabel.text = "-"
+        }
+        
+        if let rawValue = todo.priority,
+           let priority = RegistrationViewController.Priority(rawValue: rawValue) {
+            detailView.priorityLabel.text = priority.meaning
+        } else {
+            detailView.priorityLabel.text = "-"
+        }
     }
     
     @objc func xButtonClicked() {

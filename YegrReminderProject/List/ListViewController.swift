@@ -46,10 +46,6 @@ final class ListViewController: UIViewController {
     private func configureUI() {
         view.backgroundColor = .systemBackground
         
-        let left = UIBarButtonItem(image: UIImage(systemName: "plus"), style: .plain, target: self, action: #selector(plusButtonClicked))
-        navigationItem.leftBarButtonItem = left
-        navigationItem.leftBarButtonItem?.tintColor = .label
-        
         let right = UIBarButtonItem(image: UIImage(systemName: "ellipsis.circle"), style: .plain, target: self, action: #selector(filterButtonClicked))
         navigationItem.rightBarButtonItem = right
         navigationItem.rightBarButtonItem?.tintColor = .label
@@ -71,15 +67,7 @@ final class ListViewController: UIViewController {
         listTableView.register(ListTableViewCell.self, forCellReuseIdentifier: ListTableViewCell.id)
     }
     
-    @objc func plusButtonClicked() {
-        let registrationVC = RegistrationViewController()
-        registrationVC.delegate = self
-        let registrationNav = UINavigationController(rootViewController: registrationVC)
-        present(registrationNav, animated: true)
-    }
-    
     @objc func filterButtonClicked() {
-        print(#function)
         let alert = UIAlertController(title: "정렬 & 핉터", message: nil, preferredStyle: .actionSheet)
         let deadline = UIAlertAction(title: "마감일 순으로 보기", style: .default) { _ in
             self.list = self.realm.objects(TodoTable.self).sorted(byKeyPath: "deadline", ascending: true)
@@ -114,10 +102,25 @@ extension ListViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ListTableViewCell.id, for: indexPath) as? ListTableViewCell else { return UITableViewCell() }
         let data = list[indexPath.row]
         cell.titleLabel.text = data.memoTitle
-        cell.memoLabel.text = data.Content
-        cell.deadlineLabel.text = data.deadline
+        cell.memoLabel.text = data.content
+        if let deadline = data.deadline {
+            cell.deadlineLabel.text = DateFormatter.deadlineDateFormatter.string(from: deadline)
+        } else {
+            cell.deadlineLabel.text = "-"
+        }
+        
+        if let tag = data.tag {
+            cell.tagLabel.text = "# \(tag)"
+        }
+        
         cell.backgroundColor = .systemBackground
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let vc = DetailViewController()
+        vc.todo = list[indexPath.row]
+        present(vc,animated: true)
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
@@ -145,11 +148,5 @@ extension ListViewController: UITableViewDataSource {
 extension ListViewController: UITableViewDelegate {    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 120
-    }
-}
-
-extension ListViewController: DismissDelegate {
-    func updateDataAfterDismiss() {
-        listTableView.reloadData()
     }
 }

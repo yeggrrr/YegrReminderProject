@@ -13,7 +13,10 @@ final class ListTableViewCell: UITableViewCell {
     let contentsStackView = UIStackView()
     let titleLabel = UILabel()
     let memoLabel = UILabel()
+    
+    let bottomStackView = UIStackView()
     let deadlineLabel = UILabel()
+    let tagLabel = UILabel()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -32,7 +35,9 @@ final class ListTableViewCell: UITableViewCell {
         contentView.addSubview(contentsStackView)
         contentsStackView.addArrangedSubview(titleLabel)
         contentsStackView.addArrangedSubview(memoLabel)
-        contentsStackView.addArrangedSubview(deadlineLabel)
+        contentsStackView.addArrangedSubview(bottomStackView)
+        bottomStackView.addArrangedSubview(deadlineLabel)
+        bottomStackView.addArrangedSubview(tagLabel)
     }
     
     private func configureLayout() {
@@ -51,7 +56,7 @@ final class ListTableViewCell: UITableViewCell {
         }
         
         titleLabel.snp.makeConstraints {
-            $0.height.equalTo(45)
+            $0.height.equalTo(35)
         }
         
         memoLabel.snp.makeConstraints {
@@ -71,5 +76,8 @@ final class ListTableViewCell: UITableViewCell {
         contentsStackView.spacing = 1
         contentsStackView.alignment = .fill
         contentsStackView.distribution = .fillProportionally
+        
+        bottomStackView.axis = .horizontal
+        bottomStackView.spacing = 16
     }
 }

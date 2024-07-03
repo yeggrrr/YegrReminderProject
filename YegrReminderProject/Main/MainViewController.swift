@@ -7,12 +7,17 @@
 
 import UIKit
 import SnapKit
+import RealmSwift
 
 class MainViewController: UIViewController {
     let currentTitleLabel = UILabel()
-    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: CollecionViewLayout())
+    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collecionViewLayout())
     let newTodoButton = UIButton()
     let addListButton = UIButton()
+    
+    let realm = try! Realm()
+    
+    var totalCount: Int = 0
     
     enum ButtonType: String, CaseIterable {
         case today = "오늘"
@@ -59,6 +64,7 @@ class MainViewController: UIViewController {
         configureLayout()
         configureUI()
         configureCollectionView()
+        updateTotalCount()
     }
     
     private func configureHierarchy() {
@@ -123,7 +129,7 @@ class MainViewController: UIViewController {
         collectionView.register(MainCollectionViewCell.self, forCellWithReuseIdentifier: MainCollectionViewCell.id)
     }
     
-    private static func CollecionViewLayout() -> UICollectionViewLayout {
+    private static func collecionViewLayout() -> UICollectionViewLayout {
         let layout  = UICollectionViewFlowLayout()
         let sectionSpacing: CGFloat = 10
         let cellSpacing: CGFloat = 10
@@ -136,10 +142,14 @@ class MainViewController: UIViewController {
         return layout
     }
     
+    func updateTotalCount() {
+        totalCount = realm.objects(TodoTable.self).count
+        collectionView.reloadData()
+    }
+    
     @objc func newTodoButtonClicked() {
-        print(#function)
-        
         let registrationVC = RegistrationViewController()
+        registrationVC.delegate = self
         let registrationNav = UINavigationController(rootViewController: registrationVC)
         present(registrationNav, animated: true)
     }
@@ -151,7 +161,6 @@ class MainViewController: UIViewController {
     
     @objc func filterButtonClicked() {
         print(#function)
-        
     }
 }
 
@@ -165,13 +174,19 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         cell.buttonImageView.image = UIImage(systemName: ButtonType.allCases[indexPath.row].image)
         cell.buttonImageView.tintColor = ButtonType.allCases[indexPath.row].color
         cell.buttonTitleLabel.text = ButtonType.allCases[indexPath.row].rawValue
+        cell.titleCountLabel.text = "\(totalCount)"
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print(#function)
         let listVC = ListViewController()
         navigationController?.pushViewController(listVC, animated: true)
         
+    }
+}
+
+extension MainViewController: AddNewTodoDelegate {
+    func updateTodoCounts() {
+        updateTotalCount()
     }
 }
