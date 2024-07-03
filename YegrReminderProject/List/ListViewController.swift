@@ -84,9 +84,12 @@ final class ListViewController: UIViewController {
             self.listTableView.reloadData()
         }
         
+        let cancel = UIAlertAction(title: "취소", style: .destructive)
+        
         alert.addAction(deadline)
         alert.addAction(title)
         alert.addAction(priority)
+        alert.addAction(cancel)
         
         present(alert, animated: true)
         
