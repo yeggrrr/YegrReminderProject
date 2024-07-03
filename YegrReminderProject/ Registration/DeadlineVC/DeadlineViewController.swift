@@ -11,12 +11,22 @@ import SnapKit
 class DeadlineViewController: UIViewController {
     let deadlineDatePicker = UIDatePicker()
     
+    var selectedDate: Date?
+    weak var delegate: UpdateDeadlineDelegate?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         configureHierarchy()
         configureLayout()
         configureUI()
+        getSelectedDate()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        delegate?.updateDeadlineAfterDismiss(date: deadlineDatePicker.date)
     }
     
     func configureHierarchy() {
@@ -39,14 +49,16 @@ class DeadlineViewController: UIViewController {
         deadlineDatePicker.preferredDatePickerStyle = .inline
         deadlineDatePicker.datePickerMode = .date
         deadlineDatePicker.locale = Locale(identifier: "ko_KR")
-        deadlineDatePicker.addTarget(self, action: #selector(datePickerClicked), for: .valueChanged)
     }
     
-    @objc func datePickerClicked(_ sender: UIDatePicker) {
-        let datePicker = sender
-        let dateFormat = DateFormatter()
-        dateFormat.dateFormat = "yyyy.MM.dd"
-        print(dateFormat.string(from: sender.date))
+    func getSelectedDate() {
+        if let selectedDate = selectedDate {
+            deadlineDatePicker.date = selectedDate
+        }
     }
+}
+
+protocol UpdateDeadlineDelegate: AnyObject {
+    func updateDeadlineAfterDismiss(date: Date)
 }
 

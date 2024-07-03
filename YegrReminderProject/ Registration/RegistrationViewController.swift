@@ -15,7 +15,14 @@ class RegistrationViewController: UIViewController {
     let realm = try! Realm()
     weak var delegate: DismissDelegate?
     
+    var deadline: Date?
+    
+    var sectionData: [(addOption: AddOption, selectedData: String)] = [
+        (.title, ""), (.deadline, ""), (.tag, ""), (.priority, ""), (.addImage, "")
+    ]
+    
     enum AddOption: Int, CaseIterable {
+        case title
         case deadline
         case tag
         case priority
@@ -23,14 +30,11 @@ class RegistrationViewController: UIViewController {
         
         var option: String {
             switch self {
-            case .deadline:
-                "마감일"
-            case .tag:
-                "태그"
-            case .priority:
-                "우선 순위"
-            case .addImage:
-                "이미지 추가"
+            case .title: ""
+            case .deadline: "마감일"
+            case .tag: "태그"
+            case .priority: "우선 순위"
+            case .addImage: "이미지 추가"
             }
         }
     }
@@ -57,6 +61,9 @@ class RegistrationViewController: UIViewController {
     func configureUI() {
         view.backgroundColor = .systemBackground
         navigationItem.title = "새로운 할 일"
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
+        navigationItem.backBarButtonItem?.tintColor = .systemBlue
+        
         let left = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(cancelButtonClicked))
         navigationItem.leftBarButtonItem = left
         navigationItem.leftBarButtonItem?.tintColor = .systemBlue
@@ -82,9 +89,10 @@ class RegistrationViewController: UIViewController {
     @objc func addButtonClicked() {
         guard let cell = tableview.cellForRow(at: IndexPath(row: 0, section: 0)) as? TitleMemoTableViewCell else { return }
         guard let titleText = cell.titleTextField.text else { return }
+        guard let contentText = cell.memoTextView.text else { return }
 
         if !titleText.isEmpty {
-            let data = TodoTable(memoTitle: titleText, Content: nil, deadline: nil, tag: nil, priority: 1, image: nil, isDone: false)
+            let data = TodoTable(memoTitle: titleText, Content: contentText, deadline: nil, tag: nil, priority: 1, image: nil, isDone: false)
             
             try! realm.write {
                 realm.add(data)
@@ -100,9 +108,10 @@ class RegistrationViewController: UIViewController {
         navigationItem.rightBarButtonItem?.isEnabled = !text.isEmpty
     }
 }
+
 extension RegistrationViewController: UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
-        return AddOption.allCases.count + 1
+        return sectionData.count
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -118,9 +127,30 @@ extension RegistrationViewController: UITableViewDataSource {
             let cell = UITableViewCell(style: .value1, reuseIdentifier: nil)
             cell.selectionStyle = .none
             cell.accessoryType = .disclosureIndicator
-            cell.textLabel?.text = AddOption.allCases[indexPath.section - 1].option
             cell.textLabel?.textColor = .label
+            cell.textLabel?.text = sectionData[indexPath.section].addOption.option
+            cell.detailTextLabel?.text = sectionData[indexPath.section].selectedData
             return cell
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        switch indexPath.section {
+        case 1:
+            let vc = DeadlineViewController()
+            vc.delegate = self
+            vc.selectedDate = deadline
+            navigationController?.pushViewController(vc, animated: true)
+        case 2:
+            let vc = TagViewController()
+            navigationController?.pushViewController(vc, animated: true)
+        case 3:
+            let vc = PriorityViewController()
+            navigationController?.pushViewController(vc, animated: true)
+        case 4:
+            print("ImageVC")
+        default:
+            break
         }
     }
 }
@@ -140,6 +170,27 @@ extension RegistrationViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         return UIView()
+    }
+}
+
+extension RegistrationViewController: UpdateDeadlineDelegate {
+    func updateDeadlineAfterDismiss(date: Date) {
+        deadline = date
+        
+        let dateFormat = DateFormatter()
+        dateFormat.dateFormat = "yyyy.MM.dd"
+        
+        var index = 0
+        for i in 0..<sectionData.count {
+            let item = sectionData[i]
+            if item.addOption == .deadline {
+                index = i
+                break
+            }
+        }
+        
+        sectionData[index].selectedData = dateFormat.string(from: date)
+        tableview.reloadData()
     }
 }
 
