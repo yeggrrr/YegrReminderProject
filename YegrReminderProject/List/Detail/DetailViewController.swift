@@ -41,7 +41,7 @@ class DetailViewController: UIViewController {
     }
     
     func configureUI() {
-        view.backgroundColor = .darkGray
+        view.backgroundColor = .systemBackground
         
         xButton.setImage(UIImage(systemName: "xmark"), for: .normal)
         xButton.tintColor = .label
