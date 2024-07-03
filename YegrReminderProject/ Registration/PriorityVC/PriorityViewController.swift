@@ -14,12 +14,22 @@ class PriorityViewController: UIViewController {
       return control
     }()
     
+    var selectedPriority: Int?
+    weak var delegate: UpdatePriorityDelegate?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         configureHierarchy()
         configureLayout()
         configureUI()
+        getSelectedPriority()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        delegate?.updatePriorityAfterDismiss(priority: prioritysegmentedControl.selectedSegmentIndex)
     }
     
     func configureHierarchy() {
@@ -38,12 +48,15 @@ class PriorityViewController: UIViewController {
     func configureUI() {
         view.backgroundColor = .systemBackground
         title = "우선순위 설정"
-        
-        prioritysegmentedControl.addTarget(self, action: #selector(segmentValueSelected(_:)), for: .valueChanged)
-        prioritysegmentedControl.selectedSegmentIndex = 1
     }
     
-    @objc func segmentValueSelected(_ sender: UISegmentedControl) {
-        print(#function, sender.selectedSegmentIndex)
+    func getSelectedPriority() {
+        if let selectedPriority = selectedPriority {
+            prioritysegmentedControl.selectedSegmentIndex = selectedPriority
+        }
     }
+}
+
+protocol UpdatePriorityDelegate: AnyObject {
+    func updatePriorityAfterDismiss(priority: Int)
 }
