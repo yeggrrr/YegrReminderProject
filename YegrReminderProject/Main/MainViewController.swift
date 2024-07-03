@@ -14,6 +14,44 @@ class MainViewController: UIViewController {
     let newTodoButton = UIButton()
     let addListButton = UIButton()
     
+    enum ButtonType: String, CaseIterable {
+        case today = "오늘"
+        case scheduled = "예정"
+        case entire = "전체"
+        case flag = "깃발 표시"
+        case complete = "완료됨"
+        
+        var image: String {
+            switch self {
+            case .today:
+                "doc.circle.fill"
+            case .scheduled:
+                "calendar.circle.fill"
+            case .entire:
+                "tray.circle.fill"
+            case .flag:
+                "flag.circle.fill"
+            case .complete:
+                "checkmark.circle.fill"
+            }
+        }
+        
+        var color: UIColor {
+            switch self {
+            case .today:
+                    .systemBlue
+            case .scheduled:
+                    .systemRed
+            case .entire:
+                    .lightGray
+            case .flag:
+                    .systemYellow
+            case .complete:
+                    .systemCyan
+            }
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -101,8 +139,7 @@ class MainViewController: UIViewController {
     @objc func newTodoButtonClicked() {
         print(#function)
         
-         let registrationVC = RegistrationViewController()
-        // registrationVC.delegate = self
+        let registrationVC = RegistrationViewController()
         let registrationNav = UINavigationController(rootViewController: registrationVC)
         present(registrationNav, animated: true)
     }
@@ -125,8 +162,16 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainCollectionViewCell.id, for: indexPath) as? MainCollectionViewCell else { return UICollectionViewCell() }
-        cell.backgroundColor = .darkGray
-        cell.layer.cornerRadius = 10
+        cell.buttonImageView.image = UIImage(systemName: ButtonType.allCases[indexPath.row].image)
+        cell.buttonImageView.tintColor = ButtonType.allCases[indexPath.row].color
+        cell.buttonTitleLabel.text = ButtonType.allCases[indexPath.row].rawValue
         return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print(#function)
+        let listVC = ListViewController()
+        navigationController?.pushViewController(listVC, animated: true)
+        
     }
 }

@@ -41,8 +41,8 @@ class MainCollectionViewCell: UICollectionViewCell {
         }
         
         buttonTitleLabel.snp.makeConstraints {
-            $0.top.equalTo(buttonImageView.snp.bottom)
-            $0.leading.equalTo(safeArea).offset(5)
+            $0.top.equalTo(buttonImageView.snp.bottom).offset(3)
+            $0.leading.equalTo(safeArea).offset(10)
             $0.bottom.equalTo(safeArea).offset(-5)
         }
         
@@ -50,14 +50,15 @@ class MainCollectionViewCell: UICollectionViewCell {
             $0.top.trailing.equalTo(safeArea).inset(5)
             $0.height.width.equalTo(50)
         }
-        
     }
     
     func configureUI() {
-        buttonImageView.backgroundColor = .systemGray5
-        buttonImageView.image = UIImage(systemName: "calendar.circle.fill")
+        contentView.layer.cornerRadius = 10
+        contentView.backgroundColor = UIColor(named: "CellColor")
         
-        buttonTitleLabel.text = "아아우우"
+        buttonImageView.backgroundColor = .white
+        buttonImageView.layer.cornerRadius = 25
+        
         buttonTitleLabel.textColor = .lightGray
         buttonTitleLabel.textAlignment = .left
         buttonTitleLabel.font = .systemFont(ofSize: 17, weight: .semibold)
