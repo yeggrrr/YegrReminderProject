@@ -34,6 +34,8 @@ class DeadlineViewController: UIViewController {
     
     func configureUI() {
         view.backgroundColor = .systemBackground
+        title = "마감일 설정"
+        
         deadlineDatePicker.preferredDatePickerStyle = .inline
         deadlineDatePicker.datePickerMode = .date
         deadlineDatePicker.locale = Locale(identifier: "ko_KR")
