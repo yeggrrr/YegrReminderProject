@@ -26,6 +26,8 @@
 		6872EA6D2C3478D100267995 /* DeadlineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6872EA6C2C3478D100267995 /* DeadlineViewController.swift */; };
 		6872EA732C35380900267995 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6872EA722C35380900267995 /* MainViewController.swift */; };
 		6872EA752C35453200267995 /* MainCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6872EA742C35453200267995 /* MainCollectionViewCell.swift */; };
+		6872EA772C35615500267995 /* TagViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6872EA762C35615500267995 /* TagViewController.swift */; };
+		6872EA792C35630100267995 /* UITextField+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6872EA782C35630100267995 /* UITextField+.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -61,6 +63,8 @@
 		6872EA6C2C3478D100267995 /* DeadlineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeadlineViewController.swift; sourceTree = "<group>"; };
 		6872EA722C35380900267995 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		6872EA742C35453200267995 /* MainCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCollectionViewCell.swift; sourceTree = "<group>"; };
+		6872EA762C35615500267995 /* TagViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagViewController.swift; sourceTree = "<group>"; };
+		6872EA782C35630100267995 /* UITextField+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +128,7 @@
 			children = (
 				6860532E2C33EC8200D60EA0 /* ReusableProtocol+.swift */,
 				686053392C33FA9D00D60EA0 /* UILabel+.swift */,
+				6872EA782C35630100267995 /* UITextField+.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -168,6 +173,7 @@
 		6872EA6A2C34783B00267995 /* TagVC */ = {
 			isa = PBXGroup;
 			children = (
+				6872EA762C35615500267995 /* TagViewController.swift */,
 			);
 			path = TagVC;
 			sourceTree = "<group>";
@@ -274,6 +280,7 @@
 				6872EA732C35380900267995 /* MainViewController.swift in Sources */,
 				6860533C2C342D9600D60EA0 /* TitleMemoTableViewCell.swift in Sources */,
 				6872EA752C35453200267995 /* MainCollectionViewCell.swift in Sources */,
+				6872EA792C35630100267995 /* UITextField+.swift in Sources */,
 				6860532B2C33EBF400D60EA0 /* ListTableViewCell.swift in Sources */,
 				6860532F2C33EC8200D60EA0 /* ReusableProtocol+.swift in Sources */,
 				6860533A2C33FA9D00D60EA0 /* UILabel+.swift in Sources */,
@@ -281,6 +288,7 @@
 				6872EA6D2C3478D100267995 /* DeadlineViewController.swift in Sources */,
 				6872EA692C34752100267995 /* PriorityViewController.swift in Sources */,
 				686053172C33E43C00D60EA0 /* SceneDelegate.swift in Sources */,
+				6872EA772C35615500267995 /* TagViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
