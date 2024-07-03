@@ -10,6 +10,7 @@ import SnapKit
 import RealmSwift
 
 final class ListViewController: UIViewController {
+    let currentTitleLabel = UILabel()
     private let listTableView = UITableView()
     
     let realm = try! Realm()
@@ -25,12 +26,20 @@ final class ListViewController: UIViewController {
     }
     
     private func configureHierarchy() {
+        view.addSubview(currentTitleLabel)
         view.addSubview(listTableView)
     }
     
     private func configureLayout() {
+        currentTitleLabel.snp.makeConstraints {
+            $0.top.equalTo(view.safeAreaLayoutGuide).offset(20)
+            $0.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(10)
+            $0.height.equalTo(40)
+        }
+        
         listTableView.snp.makeConstraints {
-            $0.edges.equalTo(view.safeAreaLayoutGuide)
+            $0.top.equalTo(currentTitleLabel.snp.bottom)
+            $0.horizontalEdges.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
     
@@ -44,6 +53,10 @@ final class ListViewController: UIViewController {
         let right = UIBarButtonItem(image: UIImage(systemName: "ellipsis.circle"), style: .plain, target: self, action: #selector(filterButtonClicked))
         navigationItem.rightBarButtonItem = right
         navigationItem.rightBarButtonItem?.tintColor = .label
+        
+        currentTitleLabel.text = "전체"
+        currentTitleLabel.textColor = .systemBlue
+        currentTitleLabel.font = .systemFont(ofSize: 35, weight: .bold)
         
         fetch()
     }
@@ -129,15 +142,7 @@ extension ListViewController: UITableViewDataSource {
     }
 }
 
-extension ListViewController: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 30
-    }
-    
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "전체"
-    }
-    
+extension ListViewController: UITableViewDelegate {    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 120
     }
