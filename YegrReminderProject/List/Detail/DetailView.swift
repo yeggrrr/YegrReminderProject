@@ -145,7 +145,6 @@ class DetailView: UIView {
         titleView.layer.borderWidth = 3
         titleView.layer.borderColor = UIColor.white.cgColor
         
-        titleLabel.text = "어쩌구저쩌구"
         titleLabel.setUI(txtColor: .darkGray, fontStyle: .systemFont(ofSize: 17, weight: .semibold), txtAlignment: .center)
         
         memoNameLabel.detailUI(txt: "메모", txtColor: .black, txtAlignment: .left, fontStyle: .systemFont(ofSize: 17, weight: .heavy))
@@ -153,20 +152,16 @@ class DetailView: UIView {
         memoView.layer.borderWidth = 3
         memoView.layer.borderColor = UIColor.white.cgColor
         
-        memoLabel.text = "메모내용어쩌구메모내용어쩌구메모내용어쩌구메모내용어쩌구"
         memoLabel.numberOfLines = 0
         memoLabel.setUI(txtColor: .darkGray, fontStyle: .systemFont(ofSize: 17, weight: .regular), txtAlignment: .left)
         
         deadlineNameLabel.detailUI(txt: "마감일:", txtColor: .black, txtAlignment: .left, fontStyle: .systemFont(ofSize: 17, weight: .semibold))
-        deadlineLabel.text = "2024.07.03"
         deadlineLabel.setUI(txtColor: .darkGray, fontStyle: .systemFont(ofSize: 17, weight: .regular), txtAlignment: .left)
         
         tagNameLabel.detailUI(txt: "태그:", txtColor: .black, txtAlignment: .left, fontStyle: .systemFont(ofSize: 17, weight: .semibold))
-        tagLabel.text = "#일상"
         tagLabel.setUI(txtColor: .darkGray, fontStyle: .systemFont(ofSize: 17, weight: .regular), txtAlignment: .left)
         
         priorityNameLabel.detailUI(txt: "우선순위:", txtColor: .black, txtAlignment: .left, fontStyle: .systemFont(ofSize: 17, weight: .semibold))
-        priorityLabel.text = "보통"
         priorityLabel.setUI(txtColor: .darkGray, fontStyle: .systemFont(ofSize: 17, weight: .regular), txtAlignment: .left)
     }
 }
