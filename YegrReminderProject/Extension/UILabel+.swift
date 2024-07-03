@@ -13,4 +13,11 @@ extension UILabel {
         font = fontStyle
         textAlignment = txtAlignment
     }
+    
+    func detailUI(txt: String, txtColor: UIColor, txtAlignment: NSTextAlignment, fontStyle: UIFont) {
+        text = txt
+        textColor = txtColor
+        textAlignment = txtAlignment
+        font = fontStyle
+    }
 }
