@@ -16,6 +16,7 @@ class RegistrationViewController: UIViewController {
     weak var delegate: DismissDelegate?
     
     var deadline: Date?
+    var inPutTag: String?
     
     var sectionData: [(addOption: AddOption, selectedData: String)] = [
         (.title, ""), (.deadline, ""), (.tag, ""), (.priority, ""), (.addImage, "")
@@ -143,6 +144,8 @@ extension RegistrationViewController: UITableViewDataSource {
             navigationController?.pushViewController(vc, animated: true)
         case 2:
             let vc = TagViewController()
+            vc.delegate = self
+            vc.inputTag = inPutTag
             navigationController?.pushViewController(vc, animated: true)
         case 3:
             let vc = PriorityViewController()
@@ -190,6 +193,24 @@ extension RegistrationViewController: UpdateDeadlineDelegate {
         }
         
         sectionData[index].selectedData = dateFormat.string(from: date)
+        tableview.reloadData()
+    }
+}
+
+extension RegistrationViewController: UpdateTagDelegate {
+    func updateTagAfterDismiss(tag: String) {
+        inPutTag = tag
+        
+        var index = 0
+        for i in 0..<sectionData.count {
+            let item = sectionData[i]
+            if item.addOption == .tag {
+                index = i
+                break
+            }
+        }
+        
+        sectionData[index].selectedData = tag
         tableview.reloadData()
     }
 }
