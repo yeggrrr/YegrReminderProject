@@ -8,12 +8,12 @@
 import UIKit
 import SnapKit
 
-class TitleMemoTableViewCell: UITableViewCell {
+final class TitleMemoTableViewCell: UITableViewCell {
     let titleTextField = UITextField()
-    let dividerView = UIView()
+    private let dividerView = UIView()
     let memoTextView = UITextView()
     
-    let placeholder = "메모"
+    private let placeholder = "메모"
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -27,13 +27,13 @@ class TitleMemoTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configureHierarchy() {
+    private func configureHierarchy() {
         contentView.addSubview(titleTextField)
         contentView.addSubview(dividerView)
         contentView.addSubview(memoTextView)
     }
     
-    func configureLayout() {
+    private func configureLayout() {
         let safeArea = contentView.safeAreaLayoutGuide
         titleTextField.snp.makeConstraints {
             $0.top.equalTo(safeArea)
@@ -54,7 +54,7 @@ class TitleMemoTableViewCell: UITableViewCell {
         }
     }
     
-    func configureUI() {
+    private func configureUI() {
         titleTextField.placeholder = "제목"
         dividerView.backgroundColor = .darkGray
         memoTextView.backgroundColor = .clear

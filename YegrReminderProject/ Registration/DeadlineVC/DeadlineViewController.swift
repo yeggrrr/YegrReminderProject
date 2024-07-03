@@ -8,8 +8,8 @@
 import UIKit
 import SnapKit
 
-class DeadlineViewController: UIViewController {
-    let deadlineDatePicker = UIDatePicker()
+final class DeadlineViewController: UIViewController {
+    private let deadlineDatePicker = UIDatePicker()
     
     var selectedDate: Date?
     weak var delegate: UpdateDeadlineDelegate?
@@ -29,11 +29,11 @@ class DeadlineViewController: UIViewController {
         delegate?.updateDeadlineAfterDismiss(date: deadlineDatePicker.date)
     }
     
-    func configureHierarchy() {
+    private func configureHierarchy() {
         view.addSubview(deadlineDatePicker)
     }
     
-    func configureLayout() {
+    private func configureLayout() {
         let safeArea = view.safeAreaLayoutGuide
         
         deadlineDatePicker.snp.makeConstraints {
@@ -42,7 +42,7 @@ class DeadlineViewController: UIViewController {
         }
     }
     
-    func configureUI() {
+    private func configureUI() {
         view.backgroundColor = .systemBackground
         title = "마감일 설정"
         
@@ -51,7 +51,7 @@ class DeadlineViewController: UIViewController {
         deadlineDatePicker.locale = Locale(identifier: "ko_KR")
     }
     
-    func getSelectedDate() {
+    private func getSelectedDate() {
         if let selectedDate = selectedDate {
             deadlineDatePicker.date = selectedDate
         }

@@ -10,11 +10,11 @@ import SnapKit
 import RealmSwift
 
 final class ListViewController: UIViewController {
-    let currentTitleLabel = UILabel()
+    private let currentTitleLabel = UILabel()
     private let listTableView = UITableView()
     
-    let realm = try! Realm()
-    var list: Results<TodoTable>!
+    private let realm = try! Realm()
+    private var list: Results<TodoTable>!
     
     override func viewDidLoad() {
         super.viewDidLoad()

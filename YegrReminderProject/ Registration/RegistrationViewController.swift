@@ -9,17 +9,17 @@ import UIKit
 import SnapKit
 import RealmSwift
 
-class RegistrationViewController: UIViewController {
-    let tableview = UITableView(frame: .zero, style: .insetGrouped)
+final class RegistrationViewController: UIViewController {
+    private let tableview = UITableView(frame: .zero, style: .insetGrouped)
     
-    let realm = try! Realm()
+    private let realm = try! Realm()
     weak var delegate: AddNewTodoDelegate?
     
-    var deadline: Date?
-    var inputTag: String?
-    var selectPriority: Int?
+    private var deadline: Date?
+    private var inputTag: String?
+    private var selectPriority: Int?
     
-    var sectionData: [(addOption: AddOption, selectedData: String)] = [
+    private var sectionData: [(addOption: AddOption, selectedData: String)] = [
         (.title, ""), (.deadline, ""), (.tag, ""), (.priority, ""), (.addImage, "")
     ]
     
@@ -70,17 +70,17 @@ class RegistrationViewController: UIViewController {
         delegate?.updateTodoCounts()
     }
     
-    func configureHierarchy() {
+    private func configureHierarchy() {
         view.addSubview(tableview)
     }
     
-    func configureLayout() {
+    private func configureLayout() {
         tableview.snp.makeConstraints {
             $0.edges.equalTo(view.safeAreaLayoutGuide)
         }
     }
     
-    func configureUI() {
+    private func configureUI() {
         view.backgroundColor = .systemBackground
         navigationItem.title = "새로운 할 일"
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
@@ -96,7 +96,7 @@ class RegistrationViewController: UIViewController {
         navigationItem.rightBarButtonItem?.isEnabled = false
     }
     
-    func configureTableView() {
+    private func configureTableView() {
         tableview.delegate = self
         tableview.dataSource = self
         tableview.register(TitleMemoTableViewCell.self, forCellReuseIdentifier: TitleMemoTableViewCell.id)

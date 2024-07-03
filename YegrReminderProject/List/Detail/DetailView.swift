@@ -8,23 +8,23 @@
 import UIKit
 import SnapKit
 
-class DetailView: UIView {
-    let todoLabel = UILabel()
+final class DetailView: UIView {
+    private let todoLabel = UILabel()
     
-    let titleView = UIView()
+    private let titleView = UIView()
     let titleLabel = UILabel()
     
-    let memoView = UIView()
-    let memoNameLabel = UILabel()
+    private let memoView = UIView()
+    private let memoNameLabel = UILabel()
     let memoLabel = UILabel()
     
-    let deadlineNameLabel = UILabel()
+    private let deadlineNameLabel = UILabel()
     let deadlineLabel = UILabel()
     
-    let tagNameLabel = UILabel()
+    private let tagNameLabel = UILabel()
     let tagLabel = UILabel()
     
-    let priorityNameLabel = UILabel()
+    private let priorityNameLabel = UILabel()
     let priorityLabel = UILabel()
     
     override init(frame: CGRect) {
@@ -39,7 +39,7 @@ class DetailView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func configureHierarchy() {
+    private func configureHierarchy() {
         addSubview(todoLabel)
         
         addSubview(titleView)
@@ -59,7 +59,7 @@ class DetailView: UIView {
         addSubview(priorityLabel)
     }
     
-    func configureLayout() {
+    private func configureLayout() {
         let safeArea = safeAreaLayoutGuide
         todoLabel.snp.makeConstraints {
             $0.top.equalTo(safeArea).offset(20)
@@ -138,7 +138,7 @@ class DetailView: UIView {
         }
     }
     
-    func configureUI() {
+    private func configureUI() {
         todoLabel.detailUI(txt: "TODO", txtColor: .white, txtAlignment: .center, fontStyle: .systemFont(ofSize: 25, weight: .black))
         
         titleView.layer.cornerRadius = 10

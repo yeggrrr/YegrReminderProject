@@ -9,15 +9,15 @@ import UIKit
 import SnapKit
 import RealmSwift
 
-class MainViewController: UIViewController {
-    let currentTitleLabel = UILabel()
-    let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collecionViewLayout())
-    let newTodoButton = UIButton()
-    let addListButton = UIButton()
+final class MainViewController: UIViewController {
+    private let currentTitleLabel = UILabel()
+    private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collecionViewLayout())
+    private let newTodoButton = UIButton()
+    private let addListButton = UIButton()
     
-    let realm = try! Realm()
+    private let realm = try! Realm()
     
-    var totalCount: Int = 0
+    private var totalCount: Int = 0
     
     enum ButtonType: String, CaseIterable {
         case today = "오늘"
@@ -123,7 +123,7 @@ class MainViewController: UIViewController {
         addListButton.addTarget(self, action: #selector(addListButtonClicked), for: .touchUpInside)
     }
     
-    func configureCollectionView() {
+    private func configureCollectionView() {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.register(MainCollectionViewCell.self, forCellWithReuseIdentifier: MainCollectionViewCell.id)
@@ -142,7 +142,7 @@ class MainViewController: UIViewController {
         return layout
     }
     
-    func updateTotalCount() {
+    private func updateTotalCount() {
         totalCount = realm.objects(TodoTable.self).count
         collectionView.reloadData()
     }
@@ -181,7 +181,6 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let listVC = ListViewController()
         navigationController?.pushViewController(listVC, animated: true)
-        
     }
 }
 

@@ -9,12 +9,12 @@ import UIKit
 import SnapKit
 
 final class ListTableViewCell: UITableViewCell {
-    let checkButton = UIButton()
-    let contentsStackView = UIStackView()
+    private let checkButton = UIButton()
+    private let contentsStackView = UIStackView()
     let titleLabel = UILabel()
     let memoLabel = UILabel()
     
-    let bottomStackView = UIStackView()
+    private let bottomStackView = UIStackView()
     let deadlineLabel = UILabel()
     let tagLabel = UILabel()
     

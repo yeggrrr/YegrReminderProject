@@ -8,9 +8,9 @@
 import UIKit
 import SnapKit
 
-class DetailViewController: UIViewController {
-    let detailView = DetailView()
-    let xButton = UIButton()
+final class DetailViewController: UIViewController {
+    private let detailView = DetailView()
+    private let xButton = UIButton()
     
     var todo: TodoTable?
     
@@ -22,12 +22,12 @@ class DetailViewController: UIViewController {
         configureUI()
     }
     
-    func configureHierarchy() {
+    private func configureHierarchy() {
         view.addSubview(xButton)
         view.addSubview(detailView)
     }
     
-    func configureLayout() {
+    private func configureLayout() {
         let safeArea = view.safeAreaLayoutGuide
         
         xButton.snp.makeConstraints {
@@ -42,7 +42,7 @@ class DetailViewController: UIViewController {
         }
     }
     
-    func configureUI() {
+    private func configureUI() {
         view.backgroundColor = .systemBackground
         
         xButton.setImage(UIImage(systemName: "xmark"), for: .normal)

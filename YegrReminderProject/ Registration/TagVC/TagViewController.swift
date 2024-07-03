@@ -8,8 +8,8 @@
 import UIKit
 import SnapKit
 
-class TagViewController: UIViewController {
-    let tagTextField = UITextField()
+final class TagViewController: UIViewController {
+    private let tagTextField = UITextField()
     
     var inputTag: String?
     weak var delegate: UpdateTagDelegate?
@@ -30,11 +30,11 @@ class TagViewController: UIViewController {
         delegate?.updateTagAfterDismiss(tag: tagText)
     }
     
-    func configureHierarchy() {
+    private func configureHierarchy() {
         view.addSubview(tagTextField)
     }
     
-    func configureLayout() {
+    private func configureLayout() {
         let safeArea = view.safeAreaLayoutGuide
         
         tagTextField.snp.makeConstraints {
@@ -44,12 +44,12 @@ class TagViewController: UIViewController {
         }
     }
     
-    func configureUI() {
+    private func configureUI() {
         view.backgroundColor = .systemBackground
         tagTextField.setCustomUI("태그 항목을 입력해주세요", keyboardStyle: .default)
     }
     
-    func getInputTag() {
+    private func getInputTag() {
         if let inputTag = inputTag {
             tagTextField.text = inputTag
         }
