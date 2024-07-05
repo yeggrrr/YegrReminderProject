@@ -19,6 +19,13 @@ final class RegistrationViewController: BaseViewController {
     private var deadline: Date?
     private var inputTag: String?
     private var selectPriority: Int?
+    private var selectedImage: UIImage? {
+        didSet {
+            DispatchQueue.main.async {
+                self.tableview.reloadData()
+            }
+        }
+    }
     
     private var sectionData: [(addOption: AddOption, selectedData: String)] = [
         (.title, ""), (.deadline, ""), (.tag, ""), (.priority, ""), (.addImage, "")
@@ -64,7 +71,7 @@ final class RegistrationViewController: BaseViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        print(#function)
+        
         delegate?.updateTodoCounts()
     }
     
@@ -98,6 +105,7 @@ final class RegistrationViewController: BaseViewController {
         tableview.delegate = self
         tableview.dataSource = self
         tableview.register(TitleMemoTableViewCell.self, forCellReuseIdentifier: TitleMemoTableViewCell.id)
+        tableview.register(AddImageTableViewCell.self, forCellReuseIdentifier: AddImageTableViewCell.id)
     }
     
     @objc func cancelButtonClicked() {
@@ -147,6 +155,11 @@ extension RegistrationViewController: UITableViewDataSource {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: TitleMemoTableViewCell.id, for: indexPath) as? TitleMemoTableViewCell else { return UITableViewCell() }
             cell.titleTextField.addTarget(self, action: #selector(validateTitle(_:)), for: .editingChanged)
             return cell
+        } else if indexPath.section == 4 {
+            guard let cell = tableView.dequeueReusableCell(withIdentifier: AddImageTableViewCell.id, for: indexPath) as? AddImageTableViewCell else { return UITableViewCell() }
+            cell.accessoryType = .disclosureIndicator
+            cell.selectedImageView.image = selectedImage
+            return cell
         } else {
             let cell = UITableViewCell(style: .value1, reuseIdentifier: nil)
             cell.selectionStyle = .none
@@ -154,6 +167,10 @@ extension RegistrationViewController: UITableViewDataSource {
             cell.textLabel?.textColor = .label
             cell.textLabel?.text = sectionData[indexPath.section].addOption.option
             cell.detailTextLabel?.text = sectionData[indexPath.section].selectedData
+            
+            if indexPath.row == 3 {
+                cell.imageView?.image = UIImage(systemName: "star")
+            }
             return cell
         }
     }
@@ -177,8 +194,8 @@ extension RegistrationViewController: UITableViewDataSource {
             navigationController?.pushViewController(vc, animated: true)
         case 4:
             let configuration = PHPickerConfiguration()
-            
             let picker = PHPickerViewController(configuration: configuration)
+            picker.delegate = self
             navigationController?.pushViewController(picker, animated: true)
         default:
             break
@@ -201,6 +218,18 @@ extension RegistrationViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
         return UIView()
+    }
+}
+
+extension RegistrationViewController: PHPickerViewControllerDelegate {
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        if let itemProvider = results.first?.itemProvider, itemProvider.canLoadObject(ofClass: UIImage.self) {
+            itemProvider.loadObject(ofClass: UIImage.self) { image, error in
+                self.selectedImage = image as? UIImage
+            }
+        }
+        
+        navigationController?.popViewController(animated: true)
     }
 }
 
