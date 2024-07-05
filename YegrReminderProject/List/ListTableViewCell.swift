@@ -9,8 +9,11 @@ import UIKit
 import SnapKit
 
 final class ListTableViewCell: BaseTableViewCell {
-    private let checkButton = UIButton()
+    let checkButton = UIButton()
     private let contentsStackView = UIStackView()
+    
+    private let topStackView = UIStackView()
+    let priorityView = UIView()
     let titleLabel = UILabel()
     let memoLabel = UILabel()
     
@@ -27,11 +30,14 @@ final class ListTableViewCell: BaseTableViewCell {
     }
     
     override func configureHierarchy() {
+        contentView.addSubview(priorityView)
         contentView.addSubview(checkButton)
         contentView.addSubview(contentsStackView)
-        contentsStackView.addArrangedSubview(titleLabel)
+        contentsStackView.addArrangedSubview(topStackView)
         contentsStackView.addArrangedSubview(memoLabel)
         contentsStackView.addArrangedSubview(bottomStackView)
+        topStackView.addArrangedSubview(titleLabel)
+        topStackView.addArrangedSubview(priorityView)
         bottomStackView.addArrangedSubview(deadlineLabel)
         bottomStackView.addArrangedSubview(tagLabel)
     }
@@ -55,6 +61,10 @@ final class ListTableViewCell: BaseTableViewCell {
             $0.height.equalTo(35)
         }
         
+        priorityView.snp.makeConstraints {
+            $0.height.width.equalTo(20)
+        }
+        
         memoLabel.snp.makeConstraints {
             $0.height.equalTo(35)
         }
@@ -72,6 +82,11 @@ final class ListTableViewCell: BaseTableViewCell {
         contentsStackView.spacing = 1
         contentsStackView.alignment = .fill
         contentsStackView.distribution = .fillProportionally
+        
+        topStackView.axis = .horizontal
+        topStackView.spacing = 16
+        
+        priorityView.layer.cornerRadius = 10
         
         bottomStackView.axis = .horizontal
         bottomStackView.spacing = 16

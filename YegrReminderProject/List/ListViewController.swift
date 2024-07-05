@@ -16,6 +16,23 @@ final class ListViewController: BaseViewController {
     private let realm = try! Realm()
     private var list: Results<TodoTable>!
     
+    enum Priority: Int {
+        case high = 0
+        case normal
+        case low
+        
+        var color: UIColor {
+            switch self {
+            case .high:
+                    .systemRed
+            case .normal:
+                    .systemYellow
+            case .low:
+                    .systemGreen
+            }
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -99,6 +116,7 @@ extension ListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ListTableViewCell.id, for: indexPath) as? ListTableViewCell else { return UITableViewCell() }
         let data = list[indexPath.row]
+        cell.selectionStyle = .none
         cell.titleLabel.text = data.memoTitle
         cell.memoLabel.text = data.content
         if let deadline = data.deadline {
@@ -111,7 +129,10 @@ extension ListViewController: UITableViewDataSource {
             cell.tagLabel.text = "# \(tag)"
         }
         
-        cell.backgroundColor = .systemBackground
+        if let priority = data.priority {
+            cell.priorityView.backgroundColor = Priority(rawValue: priority)?.color
+        }
+        
         return cell
     }
     
