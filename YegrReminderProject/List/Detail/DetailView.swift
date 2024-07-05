@@ -27,6 +27,8 @@ final class DetailView: UIView {
     private let priorityNameLabel = UILabel()
     let priorityLabel = UILabel()
     
+    let selectedImage = UIImageView()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -57,6 +59,8 @@ final class DetailView: UIView {
         
         addSubview(priorityNameLabel)
         addSubview(priorityLabel)
+        
+        addSubview(selectedImage)
     }
     
     private func configureLayout() {
@@ -136,6 +140,13 @@ final class DetailView: UIView {
             $0.trailing.equalTo(safeArea).offset(-10)
             $0.height.equalTo(20)
         }
+        
+        selectedImage.snp.makeConstraints {
+            $0.top.equalTo(priorityNameLabel.snp.bottom).offset(30)
+            $0.centerX.equalTo(safeArea)
+            $0.bottom.equalTo(safeArea).offset(-30)
+            $0.width.equalTo(selectedImage.snp.height)
+        }
     }
     
     private func configureUI() {
@@ -163,5 +174,7 @@ final class DetailView: UIView {
         
         priorityNameLabel.detailUI(txt: "우선순위:", txtColor: .black, txtAlignment: .left, fontStyle: .systemFont(ofSize: 17, weight: .semibold))
         priorityLabel.setUI(txtColor: .darkGray, fontStyle: .systemFont(ofSize: 17, weight: .regular), txtAlignment: .left)
+        
+        selectedImage.backgroundColor = .white
     }
 }

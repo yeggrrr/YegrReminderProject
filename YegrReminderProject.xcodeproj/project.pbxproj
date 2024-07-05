@@ -162,7 +162,6 @@
 				6872EA662C3474F000267995 /* DeadlineVC */,
 				6872EA6A2C34783B00267995 /* TagVC */,
 				6872EA672C34750D00267995 /* PriorityVC */,
-				6872EA6B2C34784500267995 /* AddImageVC */,
 			);
 			path = " Registration";
 			sourceTree = "<group>";
@@ -197,13 +196,6 @@
 				6872EA762C35615500267995 /* TagViewController.swift */,
 			);
 			path = TagVC;
-			sourceTree = "<group>";
-		};
-		6872EA6B2C34784500267995 /* AddImageVC */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = AddImageVC;
 			sourceTree = "<group>";
 		};
 		6872EA712C3537E100267995 /* Main */ = {
