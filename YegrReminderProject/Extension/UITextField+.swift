@@ -11,7 +11,7 @@ extension UITextField {
     func setCustomUI(_ placeholderText: String, keyboardStyle: UIKeyboardType) {
         attributedPlaceholder = NSAttributedString(
             string: placeholderText,
-            attributes: [NSAttributedString.Key.foregroundColor: UIColor(named: "PickerViewColor")]
+            attributes: [NSAttributedString.Key.foregroundColor: UIColor(named: "PickerViewColor") ?? .lightGray]
         )
         backgroundColor = .darkGray
         textColor = .white

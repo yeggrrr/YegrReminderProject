@@ -106,6 +106,27 @@ final class ListViewController: BaseViewController {
         present(alert, animated: true)
         
     }
+    
+    @objc func completeButtonClicked(_ sender: UIButton) {
+        let data = realm.objects(TodoTable.self)
+        let result = data[sender.tag]
+
+        do {
+            if result.isDone {
+                try realm.write {
+                    result.setValue(false, forKey: "isDone")
+                }
+            } else {
+                try realm.write {
+                    result.setValue(true, forKey: "isDone")
+                }
+            }
+        } catch {
+            print(error)
+        }
+        
+        listTableView.reloadData()
+    }
 }
 
 extension ListViewController: UITableViewDataSource {
@@ -119,6 +140,13 @@ extension ListViewController: UITableViewDataSource {
         cell.selectionStyle = .none
         cell.titleLabel.text = data.memoTitle
         cell.memoLabel.text = data.content
+        
+        if data.isDone {
+            cell.checkButton.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .normal)
+        } else {
+            cell.checkButton.setImage(UIImage(systemName: "circle"), for: .normal)
+        }
+        
         if let deadline = data.deadline {
             cell.deadlineLabel.text = DateFormatter.deadlineDateFormatter.string(from: deadline)
         } else {
@@ -132,6 +160,9 @@ extension ListViewController: UITableViewDataSource {
         if let priority = data.priority {
             cell.priorityView.backgroundColor = Priority(rawValue: priority)?.color
         }
+        
+        cell.checkButton.addTarget(self, action: #selector(completeButtonClicked(_:)), for: .touchUpInside)
+        cell.checkButton.tag = indexPath.row
         
         return cell
     }

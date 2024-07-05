@@ -9,17 +9,16 @@ import UIKit
 import SnapKit
 
 final class ListTableViewCell: BaseTableViewCell {
-    let checkButton = UIButton()
     private let contentsStackView = UIStackView()
-    
     private let topStackView = UIStackView()
     let priorityView = UIView()
     let titleLabel = UILabel()
     let memoLabel = UILabel()
-    
     private let bottomStackView = UIStackView()
     let deadlineLabel = UILabel()
     let tagLabel = UILabel()
+    
+    var checkButton = UIButton()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
