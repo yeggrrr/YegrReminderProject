@@ -124,6 +124,8 @@ extension ListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let delete = UIContextualAction(style: .normal, title: "삭제") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
             try! self.realm.write {
+                let data = self.list[indexPath.row]
+                self.removeImageFromDocument(filename: "\(data.id)")
                 self.realm.delete(self.list[indexPath.row])
                 self.listTableView.reloadData()
             }
