@@ -43,6 +43,7 @@ final class PriorityViewController: BaseViewController {
     }
     
     override func configureUI() {
+        view.backgroundColor = .systemBackground
         title = "우선순위 설정"
     }
     

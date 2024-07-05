@@ -78,6 +78,7 @@ final class RegistrationViewController: BaseViewController {
     }
     
     override func configureUI() {
+        view.backgroundColor = .systemBackground
         navigationItem.title = "새로운 할 일"
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
         navigationItem.backBarButtonItem?.tintColor = .systemBlue
@@ -174,7 +175,8 @@ extension RegistrationViewController: UITableViewDataSource {
             vc.selectedPriority = selectPriority
             navigationController?.pushViewController(vc, animated: true)
         case 4:
-            print("ImageVC")
+            let vc = AddImageViewController()
+            navigationController?.pushViewController(vc, animated: true)
         default:
             break
         }

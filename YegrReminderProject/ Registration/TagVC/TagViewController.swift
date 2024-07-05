@@ -42,6 +42,7 @@ final class TagViewController: BaseViewController {
     }
     
     override func configureUI() {
+        view.backgroundColor = .systemBackground
         tagTextField.setCustomUI("태그 항목을 입력해주세요", keyboardStyle: .default)
     }
     

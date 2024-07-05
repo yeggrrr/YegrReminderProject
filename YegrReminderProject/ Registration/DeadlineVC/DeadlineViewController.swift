@@ -40,6 +40,7 @@ final class DeadlineViewController:  BaseViewController {
     }
     
     override func configureUI() {
+        view.backgroundColor = .systemBackground
         title = "마감일 설정"
         
         deadlineDatePicker.preferredDatePickerStyle = .inline
