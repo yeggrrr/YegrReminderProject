@@ -35,7 +35,5 @@ class AddImageTableViewCell: BaseTableViewCell {
         titleLabel.text = "이미지 추가"
         titleLabel.textColor = .label
         titleLabel.font = .systemFont(ofSize: 17, weight: .regular)
-        
-        selectedImageView.backgroundColor = .white
     }
 }

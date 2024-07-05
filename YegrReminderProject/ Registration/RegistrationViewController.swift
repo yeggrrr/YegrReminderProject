@@ -127,6 +127,10 @@ final class RegistrationViewController: BaseViewController {
                 image: nil,
                 isDone: false)
             
+            if let image = selectedImage {
+                saveImageToDocument(image: image, filename: "\(data.id)")
+            }
+            
             try! realm.write {
                 realm.add(data)
             }
