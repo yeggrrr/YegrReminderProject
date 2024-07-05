@@ -10,7 +10,8 @@ import UIKit
 extension DateFormatter {
     static let deadlineDateFormatter: DateFormatter = {
         let dateFormat = DateFormatter()
-        dateFormat.dateFormat = "yyyy.MM.dd"
+        dateFormat.locale = Locale(identifier:"ko_KR")
+        dateFormat.dateFormat = "yyyy.MM.dd(E)"
         return dateFormat
     }()
 }
