@@ -9,8 +9,6 @@ import UIKit
 import SnapKit
 
 final class ListTableViewCell: BaseTableViewCell {
-    private let contentsStackView = UIStackView()
-    private let topStackView = UIStackView()
     let priorityView = UIView()
     let titleLabel = UILabel()
     let memoLabel = UILabel()
@@ -30,12 +28,10 @@ final class ListTableViewCell: BaseTableViewCell {
     
     override func configureHierarchy() {
         contentView.addSubview(checkButton)
-        contentView.addSubview(contentsStackView)
-        contentsStackView.addArrangedSubview(topStackView)
-        contentsStackView.addArrangedSubview(memoLabel)
-        topStackView.addArrangedSubview(titleLabel)
-        topStackView.addArrangedSubview(flagImageView)
-        topStackView.addArrangedSubview(priorityView)
+        contentView.addSubview(titleLabel)
+        contentView.addSubview(flagImageView)
+        contentView.addSubview(priorityView)
+        contentView.addSubview(memoLabel)
         contentView.addSubview(deadlineLabel)
         contentView.addSubview(tagLabel)
     }
@@ -49,28 +45,34 @@ final class ListTableViewCell: BaseTableViewCell {
             $0.width.equalTo(40)
         }
         
-        contentsStackView.snp.makeConstraints {
-            $0.top.equalTo(safeArea).inset(5)
-            $0.leading.equalTo(checkButton.snp.trailing).offset(10)
-            $0.trailing.equalTo(safeArea).offset(-10)
-            $0.bottom.equalTo(deadlineLabel.snp.top)
-        }
-        
         titleLabel.snp.makeConstraints {
-            $0.height.equalTo(35)
+            $0.top.equalTo(safeArea)
+            $0.leading.equalTo(checkButton.snp.trailing).offset(10)
+            $0.height.equalTo(30)
         }
         
         flagImageView.snp.makeConstraints {
-            $0.height.width.equalTo(20)
+            $0.centerY.equalTo(titleLabel.snp.centerY)
+            $0.leading.equalTo(titleLabel.snp.trailing).offset(10)
+            $0.width.height.equalTo(15)
         }
         
         priorityView.snp.makeConstraints {
-            $0.height.width.equalTo(20)
+            $0.top.equalTo(safeArea)
+            $0.trailing.equalTo(safeArea).offset(-10)
+            $0.width.height.equalTo(10)
+        }
+        
+        memoLabel.snp.makeConstraints {
+            $0.top.equalTo(titleLabel.snp.bottom)
+            $0.leading.equalTo(checkButton.snp.trailing).offset(10)
+            $0.trailing.equalTo(priorityView.snp.leading).offset(-10)
+            $0.bottom.equalTo(deadlineLabel.snp.top)
         }
         
         deadlineLabel.snp.makeConstraints {
-            $0.top.equalTo(contentsStackView.snp.bottom)
-            $0.bottom.equalTo(safeArea)
+            $0.top.equalTo(memoLabel.snp.bottom)
+            $0.bottom.equalTo(safeArea).offset(-10)
             $0.leading.equalTo(checkButton.snp.trailing).offset(10)
             $0.height.equalTo(20)
         }
@@ -84,23 +86,15 @@ final class ListTableViewCell: BaseTableViewCell {
     
     override func configureUI() {
         checkButton.setImage(UIImage(systemName: "circle"), for: .normal)
-        checkButton.tintColor = .label
+        checkButton.tintColor = .darkGray
         
-        titleLabel.setUI(txtColor: .label, fontStyle: .systemFont(ofSize: 17, weight: .semibold), txtAlignment: .left)
+        titleLabel.setUI(txtColor: .label, fontStyle: .systemFont(ofSize: 17, weight: .black), txtAlignment: .left)
         memoLabel.setUI(txtColor: .lightGray, fontStyle: .systemFont(ofSize: 16, weight: .regular), txtAlignment: .left)
         deadlineLabel.setUI(txtColor: .lightGray, fontStyle: .systemFont(ofSize: 14, weight: .regular), txtAlignment: .right)
-        
-        contentsStackView.axis = .vertical
-        contentsStackView.spacing = 1
-        contentsStackView.alignment = .fill
-        contentsStackView.distribution = .fillProportionally
-        
-        topStackView.axis = .horizontal
-        topStackView.spacing = 16
-        
+        tagLabel.setUI(txtColor: .systemTeal, fontStyle: .systemFont(ofSize: 15, weight: .semibold), txtAlignment: .left)
         
         flagImageView.tintColor = .systemCyan
-        priorityView.layer.cornerRadius = 10
+        priorityView.layer.cornerRadius = 5
         
         memoLabel.numberOfLines = 0
     }

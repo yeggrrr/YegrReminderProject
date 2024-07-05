@@ -71,6 +71,11 @@ final class ListViewController: BaseViewController {
         fetch()
     }
     
+    private func reloadData() {
+        fetch()
+        self.listTableView.reloadData()
+    }
+    
     private func fetch() {
         list = realm.objects(TodoTable.self)
     }
@@ -129,7 +134,7 @@ final class ListViewController: BaseViewController {
             print(error)
         }
         
-        listTableView.reloadData()
+        reloadData()
     }
 }
 
@@ -158,15 +163,19 @@ extension ListViewController: UITableViewDataSource {
         if let deadline = data.deadline {
             cell.deadlineLabel.text = DateFormatter.deadlineDateFormatter.string(from: deadline)
         } else {
-            cell.deadlineLabel.text = "-"
+            cell.deadlineLabel.text = ""
         }
         
         if let tag = data.tag {
             cell.tagLabel.text = "# \(tag)"
+        } else {
+            cell.tagLabel.text = ""
         }
         
         if let priority = data.priority {
             cell.priorityView.backgroundColor = Priority(rawValue: priority)?.color
+        } else {
+            cell.priorityView.backgroundColor = .clear
         }
         
         cell.checkButton.addTarget(self, action: #selector(completeButtonClicked(_:)), for: .touchUpInside)
