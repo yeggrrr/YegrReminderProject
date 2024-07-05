@@ -159,10 +159,17 @@ extension ListViewController: UITableViewDataSource {
             success(true)
         }
         
+        let flag = UIContextualAction(style: .normal, title: "") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
+            print("flag 클릭됨")
+            success(true)
+        }
+        
         delete.backgroundColor = .systemPink
         edit.backgroundColor = .systemYellow
+        flag.image = UIImage(systemName: "flag.fill")
+        flag.backgroundColor = .systemCyan
         
-        return UISwipeActionsConfiguration(actions:[delete, edit])
+        return UISwipeActionsConfiguration(actions:[delete, edit, flag])
     }
 }
 
