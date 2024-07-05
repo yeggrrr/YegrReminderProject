@@ -12,14 +12,13 @@ final class TitleMemoTableViewCell: BaseTableViewCell {
     let titleTextField = UITextField()
     private let dividerView = UIView()
     let memoTextView = UITextView()
-    
-    private let placeholder = "메모"
-    
+    let memoLabel = UILabel()
     
     override func configureHierarchy() {
         contentView.addSubview(titleTextField)
         contentView.addSubview(dividerView)
         contentView.addSubview(memoTextView)
+        contentView.addSubview(memoLabel)
     }
     
     override func configureLayout() {
@@ -41,28 +40,38 @@ final class TitleMemoTableViewCell: BaseTableViewCell {
             $0.horizontalEdges.equalTo(safeArea).inset(15)
             $0.bottom.equalTo(safeArea).offset(-5)
         }
+        
+        memoLabel.snp.makeConstraints {
+            $0.top.equalTo(memoTextView.snp.top).offset(10)
+            $0.leading.equalTo(memoTextView.snp.leading)
+            $0.height.equalTo(17)
+        }
     }
     
     override func configureUI() {
         titleTextField.placeholder = "제목"
         dividerView.backgroundColor = .darkGray
         memoTextView.backgroundColor = .clear
-        memoTextView.text = placeholder
         memoTextView.font = .systemFont(ofSize: 16, weight: .regular)
         memoTextView.textColor = .lightGray
         memoTextView.delegate = self
+        
+        memoLabel.text = "메모"
+        memoLabel.setUI(txtColor: .systemGray2, fontStyle: .systemFont(ofSize: 17, weight: .regular), txtAlignment: .left)
     }
 }
 
 extension TitleMemoTableViewCell: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView == memoTextView {
-            guard let text = textView.text else { return }
-            if text == placeholder {
-                textView.text = nil
-                textView.textColor = .label
-                textView.font = .systemFont(ofSize: 16, weight: .regular)
-            }
+        memoLabel.isHidden = true
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        print(#function)
+        if textView.text.isEmpty {
+            memoLabel.isHidden = false
+        } else {
+            memoLabel.isHidden = true
         }
     }
 }

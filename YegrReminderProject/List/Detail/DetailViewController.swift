@@ -51,7 +51,12 @@ final class DetailViewController: BaseViewController {
         
         guard let todo = todo else { return }
         detailView.titleLabel.text = todo.memoTitle
-        detailView.memoLabel.text = todo.content
+        
+        if let memo = todo.content {
+            detailView.memoLabel.text = memo
+        } else {
+            detailView.memoLabel.text = ""
+        }
         
         if let deadline = todo.deadline {
             detailView.deadlineLabel.text = DateFormatter.deadlineDateFormatter.string(from: deadline)
