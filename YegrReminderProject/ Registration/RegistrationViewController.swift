@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 import RealmSwift
+import PhotosUI
 
 final class RegistrationViewController: BaseViewController {
     private let tableview = UITableView(frame: .zero, style: .insetGrouped)
@@ -107,7 +108,7 @@ final class RegistrationViewController: BaseViewController {
         guard let cell = tableview.cellForRow(at: IndexPath(row: 0, section: 0)) as? TitleMemoTableViewCell else { return }
         guard let titleText = cell.titleTextField.text else { return }
         guard let contentText = cell.memoTextView.text else { return }
-
+        
         if !titleText.isEmpty {
             let data = TodoTable(
                 memoTitle: titleText,
@@ -175,8 +176,10 @@ extension RegistrationViewController: UITableViewDataSource {
             vc.selectedPriority = selectPriority
             navigationController?.pushViewController(vc, animated: true)
         case 4:
-            let vc = AddImageViewController()
-            navigationController?.pushViewController(vc, animated: true)
+            let configuration = PHPickerConfiguration()
+            
+            let picker = PHPickerViewController(configuration: configuration)
+            navigationController?.pushViewController(picker, animated: true)
         default:
             break
         }
