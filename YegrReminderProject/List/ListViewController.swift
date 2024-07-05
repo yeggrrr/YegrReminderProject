@@ -110,13 +110,14 @@ final class ListViewController: BaseViewController {
     @objc func completeButtonClicked(_ sender: UIButton) {
         let data = realm.objects(TodoTable.self)
         let result = data[sender.tag]
-
+        
         do {
-            if result.isDone {
+            switch result.isDone {
+            case true:
                 try realm.write {
                     result.setValue(false, forKey: "isDone")
                 }
-            } else {
+            case false:
                 try realm.write {
                     result.setValue(true, forKey: "isDone")
                 }
