@@ -8,30 +8,26 @@
 import UIKit
 import SnapKit
 
-final class MainCollectionViewCell: UICollectionViewCell {
+final class MainCollectionViewCell: BaseCollectionViewCell {
     let buttonImageView = UIImageView()
     let buttonTitleLabel = UILabel()
     let titleCountLabel = UILabel()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
-        configureHierarchy()
-        configureLayout()
-        configureUI()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func configureHierarchy() {
+    override func configureHierarchy() {
         contentView.addSubview(buttonImageView)
         contentView.addSubview(buttonTitleLabel)
         contentView.addSubview(titleCountLabel)
     }
     
-    private func configureLayout() {
+    override func configureLayout() {
         let safeArea = contentView.safeAreaLayoutGuide
         
         buttonImageView.snp.makeConstraints {
@@ -52,7 +48,7 @@ final class MainCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    private func configureUI() {
+    override func configureUI() {
         contentView.layer.cornerRadius = 10
         contentView.backgroundColor = UIColor(named: "CellColor")
         

@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-final class PriorityViewController: UIViewController {
+final class PriorityViewController: BaseViewController {
     private let prioritysegmentedControl: UISegmentedControl = {
       let control = UISegmentedControl(items: ["높음", "보통", "낮음"])
       return control
@@ -20,9 +20,6 @@ final class PriorityViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        configureHierarchy()
-        configureLayout()
-        configureUI()
         getSelectedPriority()
     }
     
@@ -32,11 +29,11 @@ final class PriorityViewController: UIViewController {
         delegate?.updatePriorityAfterDismiss(priority: prioritysegmentedControl.selectedSegmentIndex)
     }
     
-    private func configureHierarchy() {
+    override func configureHierarchy() {
         view.addSubview(prioritysegmentedControl)
     }
     
-    private func configureLayout() {
+    override func configureLayout() {
         let safeArea = view.safeAreaLayoutGuide
         
         prioritysegmentedControl.snp.makeConstraints {
@@ -45,8 +42,7 @@ final class PriorityViewController: UIViewController {
         }
     }
     
-    private func configureUI() {
-        view.backgroundColor = .systemBackground
+    override func configureUI() {
         title = "우선순위 설정"
     }
     

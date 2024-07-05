@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-final class ListTableViewCell: UITableViewCell {
+final class ListTableViewCell: BaseTableViewCell {
     private let checkButton = UIButton()
     private let contentsStackView = UIStackView()
     let titleLabel = UILabel()
@@ -20,17 +20,13 @@ final class ListTableViewCell: UITableViewCell {
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        
-        configureHierarchy()
-        configureLayout()
-        configureUI()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func configureHierarchy() {
+    override func configureHierarchy() {
         contentView.addSubview(checkButton)
         contentView.addSubview(contentsStackView)
         contentsStackView.addArrangedSubview(titleLabel)
@@ -40,7 +36,7 @@ final class ListTableViewCell: UITableViewCell {
         bottomStackView.addArrangedSubview(tagLabel)
     }
     
-    private func configureLayout() {
+    override func configureLayout() {
         let safeArea = contentView.safeAreaLayoutGuide
         
         checkButton.snp.makeConstraints {
@@ -64,7 +60,7 @@ final class ListTableViewCell: UITableViewCell {
         }
     }
     
-    private func configureUI() {
+    override func configureUI() {
         checkButton.setImage(UIImage(systemName: "circle"), for: .normal)
         checkButton.tintColor = .label
         

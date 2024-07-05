@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 import RealmSwift
 
-final class RegistrationViewController: UIViewController {
+final class RegistrationViewController: BaseViewController {
     private let tableview = UITableView(frame: .zero, style: .insetGrouped)
     
     private let realm = try! Realm()
@@ -58,30 +58,26 @@ final class RegistrationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        configureHierarchy()
-        configureLayout()
-        configureUI()
         configureTableView()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        
+        print(#function)
         delegate?.updateTodoCounts()
     }
     
-    private func configureHierarchy() {
+    override func configureHierarchy() {
         view.addSubview(tableview)
     }
     
-    private func configureLayout() {
+    override func configureLayout() {
         tableview.snp.makeConstraints {
             $0.edges.equalTo(view.safeAreaLayoutGuide)
         }
     }
     
-    private func configureUI() {
-        view.backgroundColor = .systemBackground
+    override func configureUI() {
         navigationItem.title = "새로운 할 일"
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
         navigationItem.backBarButtonItem?.tintColor = .systemBlue

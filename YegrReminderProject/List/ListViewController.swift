@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 import RealmSwift
 
-final class ListViewController: UIViewController {
+final class ListViewController: BaseViewController {
     private let currentTitleLabel = UILabel()
     private let listTableView = UITableView()
     
@@ -19,18 +19,15 @@ final class ListViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        configureHierarchy()
-        configureLayout()
-        configureUI()
         configureTableView()
     }
     
-    private func configureHierarchy() {
+    override func configureHierarchy() {
         view.addSubview(currentTitleLabel)
         view.addSubview(listTableView)
     }
     
-    private func configureLayout() {
+    override func configureLayout() {
         currentTitleLabel.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).offset(20)
             $0.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(10)
@@ -43,9 +40,7 @@ final class ListViewController: UIViewController {
         }
     }
     
-    private func configureUI() {
-        view.backgroundColor = .systemBackground
-        
+    override func configureUI() {
         let right = UIBarButtonItem(image: UIImage(systemName: "ellipsis.circle"), style: .plain, target: self, action: #selector(filterButtonClicked))
         navigationItem.rightBarButtonItem = right
         navigationItem.rightBarButtonItem?.tintColor = .label

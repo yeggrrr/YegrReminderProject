@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 import RealmSwift
 
-final class MainViewController: UIViewController {
+final class MainViewController: BaseViewController {
     private let currentTitleLabel = UILabel()
     private let collectionView = UICollectionView(frame: .zero, collectionViewLayout: collecionViewLayout())
     private let newTodoButton = UIButton()
@@ -60,21 +60,18 @@ final class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        configureHierarchy()
-        configureLayout()
-        configureUI()
         configureCollectionView()
         updateTotalCount()
     }
     
-    private func configureHierarchy() {
+    override func configureHierarchy() {
         view.addSubview(currentTitleLabel)
         view.addSubview(collectionView)
         view.addSubview(newTodoButton)
         view.addSubview(addListButton)
     }
     
-    private func configureLayout() {
+    override func configureLayout() {
         let safeArea = view.safeAreaLayoutGuide
         currentTitleLabel.snp.makeConstraints {
             $0.top.equalTo(safeArea).offset(20)
@@ -99,9 +96,7 @@ final class MainViewController: UIViewController {
         }
     }
     
-    private func configureUI() {
-        view.backgroundColor = .systemBackground
-        
+    override func configureUI() {
         let right = UIBarButtonItem(image: UIImage(systemName: "ellipsis.circle"), style: .plain, target: self, action: #selector(filterButtonClicked))
         navigationItem.rightBarButtonItem = right
         navigationItem.rightBarButtonItem?.tintColor = .label

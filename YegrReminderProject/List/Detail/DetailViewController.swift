@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-final class DetailViewController: UIViewController {
+final class DetailViewController: BaseViewController {
     private let detailView = DetailView()
     private let xButton = UIButton()
     
@@ -17,17 +17,14 @@ final class DetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        configureHierarchy()
-        configureLayout()
-        configureUI()
     }
     
-    private func configureHierarchy() {
+    override func configureHierarchy() {
         view.addSubview(xButton)
         view.addSubview(detailView)
     }
     
-    private func configureLayout() {
+    override func configureLayout() {
         let safeArea = view.safeAreaLayoutGuide
         
         xButton.snp.makeConstraints {
@@ -42,9 +39,7 @@ final class DetailViewController: UIViewController {
         }
     }
     
-    private func configureUI() {
-        view.backgroundColor = .systemBackground
-        
+    override func configureUI() {
         xButton.setImage(UIImage(systemName: "xmark"), for: .normal)
         xButton.tintColor = .label
         xButton.addTarget(self, action: #selector(xButtonClicked), for: .touchUpInside)

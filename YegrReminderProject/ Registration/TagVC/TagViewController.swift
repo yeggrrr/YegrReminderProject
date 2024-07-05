@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-final class TagViewController: UIViewController {
+final class TagViewController: BaseViewController {
     private let tagTextField = UITextField()
     
     var inputTag: String?
@@ -17,9 +17,6 @@ final class TagViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        configureHierarchy()
-        configureLayout()
-        configureUI()
         getInputTag()
     }
     
@@ -30,11 +27,11 @@ final class TagViewController: UIViewController {
         delegate?.updateTagAfterDismiss(tag: tagText)
     }
     
-    private func configureHierarchy() {
+    override func configureHierarchy() {
         view.addSubview(tagTextField)
     }
     
-    private func configureLayout() {
+    override func configureLayout() {
         let safeArea = view.safeAreaLayoutGuide
         
         tagTextField.snp.makeConstraints {
@@ -44,8 +41,7 @@ final class TagViewController: UIViewController {
         }
     }
     
-    private func configureUI() {
-        view.backgroundColor = .systemBackground
+    override func configureUI() {
         tagTextField.setCustomUI("태그 항목을 입력해주세요", keyboardStyle: .default)
     }
     
