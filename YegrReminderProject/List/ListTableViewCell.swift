@@ -14,7 +14,6 @@ final class ListTableViewCell: BaseTableViewCell {
     let priorityView = UIView()
     let titleLabel = UILabel()
     let memoLabel = UILabel()
-    private let bottomStackView = UIStackView()
     let deadlineLabel = UILabel()
     let tagLabel = UILabel()
     
@@ -34,26 +33,26 @@ final class ListTableViewCell: BaseTableViewCell {
         contentView.addSubview(contentsStackView)
         contentsStackView.addArrangedSubview(topStackView)
         contentsStackView.addArrangedSubview(memoLabel)
-        contentsStackView.addArrangedSubview(bottomStackView)
         topStackView.addArrangedSubview(titleLabel)
         topStackView.addArrangedSubview(priorityView)
-        bottomStackView.addArrangedSubview(deadlineLabel)
-        bottomStackView.addArrangedSubview(tagLabel)
+        contentView.addSubview(deadlineLabel)
+        contentView.addSubview(tagLabel)
     }
     
     override func configureLayout() {
         let safeArea = contentView.safeAreaLayoutGuide
         
         checkButton.snp.makeConstraints {
-            $0.centerY.equalTo(safeArea.snp.centerY)
+            $0.verticalEdges.equalTo(safeArea)
             $0.leading.equalTo(safeArea).offset(10)
-            $0.width.height.equalTo(30)
+            $0.width.equalTo(40)
         }
         
         contentsStackView.snp.makeConstraints {
-            $0.verticalEdges.equalTo(safeArea).inset(5)
+            $0.top.equalTo(safeArea).inset(5)
             $0.leading.equalTo(checkButton.snp.trailing).offset(10)
             $0.trailing.equalTo(safeArea).offset(-10)
+            $0.bottom.equalTo(deadlineLabel.snp.top)
         }
         
         titleLabel.snp.makeConstraints {
@@ -64,8 +63,17 @@ final class ListTableViewCell: BaseTableViewCell {
             $0.height.width.equalTo(20)
         }
         
-        memoLabel.snp.makeConstraints {
-            $0.height.equalTo(35)
+        deadlineLabel.snp.makeConstraints {
+            $0.top.equalTo(contentsStackView.snp.bottom)
+            $0.bottom.equalTo(safeArea)
+            $0.leading.equalTo(checkButton.snp.trailing).offset(10)
+            $0.height.equalTo(20)
+        }
+        
+        tagLabel.snp.makeConstraints {
+            $0.top.equalTo(deadlineLabel.snp.top)
+            $0.bottom.equalTo(deadlineLabel.snp.bottom)
+            $0.leading.equalTo(deadlineLabel.snp.trailing).offset(16)
         }
     }
     
@@ -87,7 +95,6 @@ final class ListTableViewCell: BaseTableViewCell {
         
         priorityView.layer.cornerRadius = 10
         
-        bottomStackView.axis = .horizontal
-        bottomStackView.spacing = 16
+        memoLabel.numberOfLines = 0
     }
 }
