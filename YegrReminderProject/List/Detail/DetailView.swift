@@ -174,7 +174,5 @@ final class DetailView: UIView {
         
         priorityNameLabel.detailUI(txt: "우선순위:", txtColor: .black, txtAlignment: .left, fontStyle: .systemFont(ofSize: 17, weight: .semibold))
         priorityLabel.setUI(txtColor: .darkGray, fontStyle: .systemFont(ofSize: 17, weight: .regular), txtAlignment: .left)
-        
-        selectedImage.backgroundColor = .white
     }
 }

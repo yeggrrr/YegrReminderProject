@@ -71,6 +71,8 @@ final class DetailViewController: BaseViewController {
         } else {
             detailView.priorityLabel.text = "-"
         }
+        
+        detailView.selectedImage.image = loadImageToDocument(filename: "\(todo.id)")
     }
     
     @objc func xButtonClicked() {
