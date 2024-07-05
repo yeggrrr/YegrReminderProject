@@ -125,7 +125,9 @@ final class RegistrationViewController: BaseViewController {
                 tag: inputTag,
                 priority: selectPriority,
                 image: nil,
-                isDone: false)
+                isDone: false,
+                flag: false
+            )
             
             if let image = selectedImage {
                 saveImageToDocument(image: image, filename: "\(data.id)")

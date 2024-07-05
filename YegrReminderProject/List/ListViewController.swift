@@ -52,12 +52,14 @@ final class ListViewController: BaseViewController {
         }
         
         listTableView.snp.makeConstraints {
-            $0.top.equalTo(currentTitleLabel.snp.bottom)
+            $0.top.equalTo(currentTitleLabel.snp.bottom).offset(20)
             $0.horizontalEdges.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
     
     override func configureUI() {
+        view.backgroundColor = .systemBackground
+        
         let right = UIBarButtonItem(image: UIImage(systemName: "ellipsis.circle"), style: .plain, target: self, action: #selector(filterButtonClicked))
         navigationItem.rightBarButtonItem = right
         navigationItem.rightBarButtonItem?.tintColor = .label
@@ -111,6 +113,7 @@ final class ListViewController: BaseViewController {
         let data = realm.objects(TodoTable.self)
         let result = data[sender.tag]
         
+        
         do {
             switch result.isDone {
             case true:
@@ -139,6 +142,7 @@ extension ListViewController: UITableViewDataSource {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ListTableViewCell.id, for: indexPath) as? ListTableViewCell else { return UITableViewCell() }
         let data = list[indexPath.row]
         cell.selectionStyle = .none
+        cell.checkButton.tag = indexPath.row
         cell.titleLabel.text = data.memoTitle
         cell.memoLabel.text = data.content
         
@@ -147,6 +151,9 @@ extension ListViewController: UITableViewDataSource {
         } else {
             cell.checkButton.setImage(UIImage(systemName: "circle"), for: .normal)
         }
+        
+        cell.flagImageView.image = UIImage(systemName: "flag.fill")
+        cell.flagImageView.isHidden = !data.flag
         
         if let deadline = data.deadline {
             cell.deadlineLabel.text = DateFormatter.deadlineDateFormatter.string(from: deadline)
@@ -163,7 +170,6 @@ extension ListViewController: UITableViewDataSource {
         }
         
         cell.checkButton.addTarget(self, action: #selector(completeButtonClicked(_:)), for: .touchUpInside)
-        cell.checkButton.tag = indexPath.row
         
         return cell
     }
@@ -199,18 +205,35 @@ extension ListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let flag = UIContextualAction(style: .normal, title: "") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
-            print("flag 클릭됨")
+            let data = self.realm.objects(TodoTable.self)
+            let result = data[indexPath.row]
+            
+            do {
+                switch result.flag {
+                case true:
+                    try self.realm.write {
+                        result.setValue(false, forKey: "flag")
+                    }
+                case false:
+                    try self.realm.write {
+                        result.setValue(true, forKey: "flag")
+                    }
+                }
+            } catch {
+                print(error)
+            }
+            
+            self.listTableView.reloadData()
             success(true)
         }
         
         flag.image = UIImage(systemName: "flag.fill")
         flag.backgroundColor = .systemCyan
-        
         return UISwipeActionsConfiguration(actions:[flag])
     }
 }
 
-extension ListViewController: UITableViewDelegate {    
+extension ListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
     }

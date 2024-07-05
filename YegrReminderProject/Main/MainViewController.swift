@@ -50,9 +50,9 @@ final class MainViewController: BaseViewController {
             case .entire:
                     .lightGray
             case .flag:
-                    .systemYellow
-            case .complete:
                     .systemCyan
+            case .complete:
+                    .systemIndigo
             }
         }
     }
@@ -62,6 +62,7 @@ final class MainViewController: BaseViewController {
         
         configureCollectionView()
         updateTotalCount()
+        print(realm.configuration.fileURL)
     }
     
     override func configureHierarchy() {
@@ -97,6 +98,8 @@ final class MainViewController: BaseViewController {
     }
     
     override func configureUI() {
+        view.backgroundColor = .systemBackground
+        
         let right = UIBarButtonItem(image: UIImage(systemName: "ellipsis.circle"), style: .plain, target: self, action: #selector(filterButtonClicked))
         navigationItem.rightBarButtonItem = right
         navigationItem.rightBarButtonItem?.tintColor = .label
@@ -169,6 +172,8 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         cell.buttonImageView.image = UIImage(systemName: ButtonType.allCases[indexPath.row].image)
         cell.buttonImageView.tintColor = ButtonType.allCases[indexPath.row].color
         cell.buttonTitleLabel.text = ButtonType.allCases[indexPath.row].rawValue
+        
+        
         cell.titleCountLabel.text = "\(totalCount)"
         return cell
     }

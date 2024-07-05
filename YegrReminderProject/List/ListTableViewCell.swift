@@ -18,6 +18,7 @@ final class ListTableViewCell: BaseTableViewCell {
     let tagLabel = UILabel()
     
     var checkButton = UIButton()
+    var flagImageView = UIImageView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -28,12 +29,12 @@ final class ListTableViewCell: BaseTableViewCell {
     }
     
     override func configureHierarchy() {
-        contentView.addSubview(priorityView)
         contentView.addSubview(checkButton)
         contentView.addSubview(contentsStackView)
         contentsStackView.addArrangedSubview(topStackView)
         contentsStackView.addArrangedSubview(memoLabel)
         topStackView.addArrangedSubview(titleLabel)
+        topStackView.addArrangedSubview(flagImageView)
         topStackView.addArrangedSubview(priorityView)
         contentView.addSubview(deadlineLabel)
         contentView.addSubview(tagLabel)
@@ -57,6 +58,10 @@ final class ListTableViewCell: BaseTableViewCell {
         
         titleLabel.snp.makeConstraints {
             $0.height.equalTo(35)
+        }
+        
+        flagImageView.snp.makeConstraints {
+            $0.height.width.equalTo(20)
         }
         
         priorityView.snp.makeConstraints {
@@ -93,6 +98,8 @@ final class ListTableViewCell: BaseTableViewCell {
         topStackView.axis = .horizontal
         topStackView.spacing = 16
         
+        
+        flagImageView.tintColor = .systemCyan
         priorityView.layer.cornerRadius = 10
         
         memoLabel.numberOfLines = 0

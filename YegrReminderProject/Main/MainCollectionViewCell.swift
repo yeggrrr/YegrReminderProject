@@ -60,7 +60,7 @@ final class MainCollectionViewCell: BaseCollectionViewCell {
         buttonTitleLabel.font = .systemFont(ofSize: 17, weight: .semibold)
         
         titleCountLabel.text = "0"
-        titleCountLabel.textColor = .label
+        titleCountLabel.textColor = .white
         titleCountLabel.textAlignment = .center
         titleCountLabel.font = .systemFont(ofSize: 35, weight: .bold)
     }

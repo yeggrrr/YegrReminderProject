@@ -13,7 +13,7 @@ extension UITextField {
             string: placeholderText,
             attributes: [NSAttributedString.Key.foregroundColor: UIColor(named: "PickerViewColor") ?? .lightGray]
         )
-        backgroundColor = .darkGray
+        backgroundColor = .systemGray2
         textColor = .white
         keyboardType = keyboardStyle
         returnKeyType = .done

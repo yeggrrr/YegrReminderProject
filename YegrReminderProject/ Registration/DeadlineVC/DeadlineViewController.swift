@@ -46,7 +46,7 @@ final class DeadlineViewController:  BaseViewController {
         deadlineDatePicker.preferredDatePickerStyle = .inline
         deadlineDatePicker.datePickerMode = .date
         deadlineDatePicker.locale = Locale(identifier: "ko_KR")
-        deadlineDatePicker.backgroundColor = UIColor(named: "PickerViewColor")
+        deadlineDatePicker.backgroundColor = .systemGray5
         deadlineDatePicker.layer.cornerRadius = 10
         deadlineDatePicker.clipsToBounds = true
     }
