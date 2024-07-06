@@ -14,10 +14,9 @@ final class ListViewController: BaseViewController {
     private let listTableView = UITableView()
     
     private let realm = try! Realm()
-    // private var list: Results<TodoTable>!
     
+    weak var delegate: UpdateListCountDelegate?
     var buttonType: MainViewController.ButtonType?
-    
     var filterList: [TodoTable] = []
     
     enum Priority: Int {
@@ -41,6 +40,47 @@ final class ListViewController: BaseViewController {
         super.viewDidLoad()
         
         configureTableView()
+        filterData()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        delegate?.updateListCount()
+    }
+    
+    func filterData() {
+        guard let buttonType = buttonType else { return }
+        
+        let objects = Array(realm.objects(TodoTable.self))
+        let todayText = DateFormatter.onlyDateFormatter.string(from: Date())
+        
+        switch buttonType {
+        case .today:
+            filterList = objects.filter {
+                if let deadline = $0.deadline {
+                    let deadlineText = DateFormatter.onlyDateFormatter.string(from: deadline)
+                    return deadlineText == todayText
+                } else {
+                    return false
+                }
+            }
+        case .scheduled:
+            filterList = objects.filter {
+                if let deadline = $0.deadline {
+                    let deadlineText = DateFormatter.onlyDateFormatter.string(from: deadline)
+                    return deadlineText > todayText
+                } else {
+                    return false
+                }
+            }
+        case .entire:
+            filterList = objects
+        case .flag:
+            filterList = objects.filter { $0.flag }
+        case .complete:
+            filterList = objects.filter { $0.isDone }
+        }
     }
     
     override func configureHierarchy() {
@@ -248,4 +288,8 @@ extension ListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
     }
+}
+
+protocol UpdateListCountDelegate: AnyObject {
+    func updateListCount()
 }

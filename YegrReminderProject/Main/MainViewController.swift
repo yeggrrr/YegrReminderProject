@@ -33,7 +33,7 @@ final class MainViewController: BaseViewController {
         case flag = "깃발 표시"
         case complete = "완료됨"
         
-        var image: String {
+        var imageName: String {
             switch self {
             case .today:
                 "doc.circle.fill"
@@ -68,7 +68,6 @@ final class MainViewController: BaseViewController {
         super.viewDidLoad()
         
         configureCollectionView()
-        updateTotalCount()
         updateCount()
         // print(realm.configuration.fileURL)
     }
@@ -148,11 +147,6 @@ final class MainViewController: BaseViewController {
         return layout
     }
     
-    private func updateTotalCount() {
-        totalCount = realm.objects(TodoTable.self).count
-        collectionView.reloadData()
-    }
-    
     func updateCount() {
         let array = Array(self.realm.objects(TodoTable.self))
         let todayText = DateFormatter.onlyDateFormatter.string(from: Date())
@@ -178,6 +172,8 @@ final class MainViewController: BaseViewController {
         totalList = Array(self.realm.objects(TodoTable.self))
         flagList = array.filter { $0.flag }
         completeList = array.filter { $0.isDone }
+        
+        collectionView.reloadData()
     }
     
     @objc func newTodoButtonClicked() {
@@ -204,7 +200,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainCollectionViewCell.id, for: indexPath) as? MainCollectionViewCell else { return UICollectionViewCell() }
-        cell.buttonImageView.image = UIImage(systemName: ButtonType.allCases[indexPath.row].image)
+        cell.buttonImageView.image = UIImage(systemName: ButtonType.allCases[indexPath.row].imageName)
         cell.buttonImageView.tintColor = ButtonType.allCases[indexPath.row].color
         cell.buttonTitleLabel.text = ButtonType.allCases[indexPath.row].rawValue
         
@@ -227,7 +223,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let listVC = ListViewController()
-        
+        listVC.delegate = self
         let type = buttonList[indexPath.item]
         listVC.buttonType = type
         
@@ -235,8 +231,8 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     }
 }
 
-extension MainViewController: AddNewTodoDelegate {
-    func updateTodoCounts() {
-        updateTotalCount()
+extension MainViewController: UpdateListCountDelegate {
+    func updateListCount() {
+        updateCount()
     }
 }
