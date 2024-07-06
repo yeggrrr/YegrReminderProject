@@ -14,7 +14,7 @@ final class RegistrationViewController: BaseViewController {
     private let tableview = UITableView(frame: .zero, style: .insetGrouped)
     
     private let realm = try! Realm()
-    weak var delegate: AddNewTodoDelegate?
+    weak var delegate: UpdateListCountDelegate?
     
     private var deadline: Date?
     private var inputTag: String?
@@ -72,7 +72,7 @@ final class RegistrationViewController: BaseViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        delegate?.updateTodoCounts()
+        delegate?.updateListCount()
     }
     
     override func configureHierarchy() {
@@ -294,8 +294,4 @@ extension RegistrationViewController: UpdatePriorityDelegate {
             tableview.reloadData()
         }
     }
-}
-
-protocol AddNewTodoDelegate: AnyObject {
-    func updateTodoCounts()
 }
