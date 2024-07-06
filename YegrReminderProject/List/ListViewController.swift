@@ -141,7 +141,7 @@ final class ListViewController: BaseViewController {
         navigationItem.rightBarButtonItem = right
         navigationItem.rightBarButtonItem?.tintColor = .label
         
-        currentTitleLabel.text = "전체"
+        currentTitleLabel.text = listFilterType?.rawValue
         currentTitleLabel.textColor = .systemBlue
         currentTitleLabel.font = .systemFont(ofSize: 35, weight: .bold)
         
