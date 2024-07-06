@@ -128,6 +128,7 @@ final class DetailViewController: BaseViewController {
         let vc = RegistrationViewController()
         vc.viewType = .update
         vc.selectedTodo = todo
+        vc.detailTodoDelegate = self
         let nav = UINavigationController(rootViewController: vc)
         present(nav, animated: true)
     }
@@ -139,6 +140,19 @@ final class DetailViewController: BaseViewController {
         }
         
         dismiss(animated: true)
+    }
+}
+
+extension DetailViewController: UpdateDetailTodoDelegate {
+    func updateDetailTodo() {
+        if let id = todo?.id {
+            let sameIdObject = realm.objects(TodoTable.self).where { todoTable in
+                todoTable.id == id
+            }.first
+            todo = sameIdObject
+        }
+        
+        configureUI()
     }
 }
 

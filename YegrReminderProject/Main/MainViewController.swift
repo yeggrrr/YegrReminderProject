@@ -182,7 +182,7 @@ final class MainViewController: BaseViewController {
     
     @objc func newTodoButtonClicked() {
         let registrationVC = RegistrationViewController()
-        registrationVC.delegate = self
+        registrationVC.updateListCountDelegate = self
         let registrationNav = UINavigationController(rootViewController: registrationVC)
         present(registrationNav, animated: true)
     }

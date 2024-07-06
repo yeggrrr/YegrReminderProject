@@ -14,7 +14,8 @@ final class RegistrationViewController: BaseViewController {
     private let tableview = UITableView(frame: .zero, style: .insetGrouped)
     
     private let realm = try! Realm()
-    weak var delegate: UpdateListCountDelegate?
+    weak var updateListCountDelegate: UpdateListCountDelegate?
+    weak var detailTodoDelegate: UpdateDetailTodoDelegate?
     
     private var selectedImage: UIImage? {
         didSet {
@@ -78,7 +79,10 @@ final class RegistrationViewController: BaseViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        delegate?.updateListCount()
+        updateListCountDelegate?.updateListCount()
+        if viewType == .update {
+            detailTodoDelegate?.updateDetailTodo()
+        }
     }
     
     override func configureHierarchy() {
@@ -350,4 +354,8 @@ extension RegistrationViewController: UpdatePriorityDelegate {
             tableview.reloadData()
         }
     }
+}
+
+protocol UpdateDetailTodoDelegate: AnyObject {
+    func updateDetailTodo()
 }
