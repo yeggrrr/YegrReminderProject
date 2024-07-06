@@ -16,9 +16,6 @@ final class RegistrationViewController: BaseViewController {
     private let realm = try! Realm()
     weak var delegate: UpdateListCountDelegate?
     
-    private var deadline: Date?
-    private var inputTag: String?
-    private var selectPriority: Int?
     private var selectedImage: UIImage? {
         didSet {
             DispatchQueue.main.async {
@@ -32,6 +29,7 @@ final class RegistrationViewController: BaseViewController {
     ]
     
     var viewType: ViewType = .add
+    var selectedTodo: TodoTable?
     
     enum AddOption: Int, CaseIterable {
         case title
@@ -73,6 +71,7 @@ final class RegistrationViewController: BaseViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        initializeData()
         configureTableView()
     }
     
@@ -118,37 +117,74 @@ final class RegistrationViewController: BaseViewController {
         tableview.register(AddImageTableViewCell.self, forCellReuseIdentifier: AddImageTableViewCell.id)
     }
     
+    private func initializeData() {
+        switch viewType {
+        case .add:
+            selectedTodo = TodoTable(memoTitle: "")
+        case .update:
+            var deadlineText = ""
+            if let deadline = selectedTodo?.deadline {
+                deadlineText = DateFormatter.deadlineDateFormatter.string(from: deadline)
+            }
+            
+            let tagText = selectedTodo?.tag ?? ""
+            var priorityText = ""
+            if let priority = selectedTodo?.priority {
+                if let value = Priority(rawValue: priority) {
+                    priorityText = value.meaning
+                }
+            }
+            
+            sectionData = [
+                (.title, ""), (.deadline, deadlineText), (.tag, tagText), (.priority, priorityText), (.addImage, "")
+            ]
+        }
+    }
+    
     @objc func cancelButtonClicked() {
         dismiss(animated: true)
     }
     
     @objc func addButtonClicked() {
         guard let cell = tableview.cellForRow(at: IndexPath(row: 0, section: 0)) as? TitleMemoTableViewCell else { return }
-        guard let titleText = cell.titleTextField.text else { return }
+        guard let titleText = cell.titleTextField.text, !titleText.isEmpty else { return }
         guard let contentText = cell.memoTextView.text else { return }
         
-        if !titleText.isEmpty {
-            let data = TodoTable(
+        switch viewType {
+        case .add:
+            let newTodo = TodoTable(
                 memoTitle: titleText,
-                Content: contentText,
-                deadline: deadline,
-                tag: inputTag,
-                priority: selectPriority,
-                image: nil,
-                isDone: false,
-                flag: false
-            )
+                content: contentText,
+                deadline: selectedTodo?.deadline,
+                tag: selectedTodo?.tag,
+                priority: selectedTodo?.priority)
             
             if let image = selectedImage {
-                saveImageToDocument(image: image, filename: "\(data.id)")
+                saveImageToDocument(image: image, filename: "\(newTodo.id)")
             }
             
             try! realm.write {
-                realm.add(data)
+                realm.add(newTodo)
             }
             
-            dismiss(animated: true)
+        case .update:
+            try! realm.write {
+                selectedTodo?.memoTitle = titleText
+                selectedTodo?.content = contentText
+            }
+            
+            if let selectedTodo = selectedTodo {
+                if let image = selectedImage {
+                    saveImageToDocument(image: image, filename: "\(selectedTodo.id)")
+                }
+                
+                try! realm.write {
+                    realm.add(selectedTodo)
+                }
+            }
         }
+        
+        dismiss(animated: true)
     }
     
     @objc func validateTitle(_ textField: UITextField) {
@@ -169,6 +205,10 @@ extension RegistrationViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
             guard let cell = tableView.dequeueReusableCell(withIdentifier: TitleMemoTableViewCell.id, for: indexPath) as? TitleMemoTableViewCell else { return UITableViewCell() }
+            if viewType == .update {
+                cell.titleTextField.text = selectedTodo?.memoTitle
+                cell.memoTextView.text = selectedTodo?.content
+            }
             cell.titleTextField.addTarget(self, action: #selector(validateTitle(_:)), for: .editingChanged)
             return cell
         } else if indexPath.section == 4 {
@@ -196,17 +236,17 @@ extension RegistrationViewController: UITableViewDataSource {
         case 1:
             let vc = DeadlineViewController()
             vc.delegate = self
-            vc.selectedDate = deadline
+            vc.selectedDate = selectedTodo?.deadline
             navigationController?.pushViewController(vc, animated: true)
         case 2:
             let vc = TagViewController()
             vc.delegate = self
-            vc.inputTag = inputTag
+            vc.inputTag = selectedTodo?.tag
             navigationController?.pushViewController(vc, animated: true)
         case 3:
             let vc = PriorityViewController()
             vc.delegate = self
-            vc.selectedPriority = selectPriority
+            vc.selectedPriority = selectedTodo?.priority
             navigationController?.pushViewController(vc, animated: true)
         case 4:
             let configuration = PHPickerConfiguration()
@@ -251,7 +291,9 @@ extension RegistrationViewController: PHPickerViewControllerDelegate {
 
 extension RegistrationViewController: UpdateDeadlineDelegate {
     func updateDeadlineAfterDismiss(date: Date) {
-        deadline = date
+        try! realm.write {
+            selectedTodo?.deadline = date
+        }
         
         var index = 0
         for i in 0..<sectionData.count {
@@ -270,7 +312,9 @@ extension RegistrationViewController: UpdateDeadlineDelegate {
 extension RegistrationViewController: UpdateTagDelegate {
     func updateTagAfterDismiss(tag: String) {
         guard !tag.isEmpty else { return }
-        inputTag = tag
+        try! realm.write {
+            selectedTodo?.tag = tag
+        }
         
         var index = 0
         for i in 0..<sectionData.count {
@@ -288,7 +332,9 @@ extension RegistrationViewController: UpdateTagDelegate {
 
 extension RegistrationViewController: UpdatePriorityDelegate {
     func updatePriorityAfterDismiss(priority: Int) {
-        selectPriority = priority
+        try! realm.write {
+            selectedTodo?.priority = priority
+        }
         
         var index = 0
         for i in 0..<sectionData.count {

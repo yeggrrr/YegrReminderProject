@@ -127,6 +127,7 @@ final class DetailViewController: BaseViewController {
     @objc func updateButtonClicked() {
         let vc = RegistrationViewController()
         vc.viewType = .update
+        vc.selectedTodo = todo
         let nav = UINavigationController(rootViewController: vc)
         present(nav, animated: true)
     }
@@ -138,7 +139,6 @@ final class DetailViewController: BaseViewController {
         }
         
         dismiss(animated: true)
-        
     }
 }
 
