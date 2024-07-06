@@ -260,6 +260,7 @@ extension ListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let vc = DetailViewController()
         vc.todo = filterList[indexPath.row]
+        vc.delegate = self
         present(vc,animated: true)
     }
     
@@ -319,6 +320,16 @@ extension ListViewController: UITableViewDataSource {
 extension ListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
+    }
+}
+
+extension ListViewController: UpdateListDelegate {
+    func updateList() {
+        filterData()
+        if let detailFilterType = detailFilterType {
+            detailFilterData(filterType: detailFilterType)
+        }
+        listTableView.reloadData()
     }
 }
 

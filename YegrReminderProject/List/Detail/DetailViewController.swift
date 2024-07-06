@@ -7,21 +7,35 @@
 
 import UIKit
 import SnapKit
+import RealmSwift
 
 final class DetailViewController: BaseViewController {
     private let detailView = DetailView()
     private let xButton = UIButton()
+    private let buttonStackView = UIStackView()
+    private let updateButton = UIButton()
+    private let deleteButton = UIButton()
     
+    let realm = try! Realm()
     var todo: TodoTable?
+    weak var delegate: UpdateListDelegate?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         
+        delegate?.updateList()
     }
     
     override func configureHierarchy() {
         view.addSubview(xButton)
         view.addSubview(detailView)
+        view.addSubview(buttonStackView)
+        buttonStackView.addArrangedSubview(updateButton)
+        buttonStackView.addArrangedSubview(deleteButton)
     }
     
     override func configureLayout() {
@@ -36,6 +50,12 @@ final class DetailViewController: BaseViewController {
         detailView.snp.makeConstraints {
             $0.horizontalEdges.equalTo(safeArea).inset(50)
             $0.verticalEdges.equalTo(safeArea).inset(100)
+        }
+        
+        buttonStackView.snp.makeConstraints {
+            $0.top.equalTo(detailView.snp.bottom).offset(10)
+            $0.horizontalEdges.equalTo(detailView.snp.horizontalEdges)
+            $0.height.equalTo(45)
         }
     }
     
@@ -78,9 +98,47 @@ final class DetailViewController: BaseViewController {
         }
         
         detailView.selectedImage.image = loadImageToDocument(filename: "\(todo.id)")
+        
+        buttonStackView.axis = .horizontal
+        buttonStackView.spacing = 10
+        buttonStackView.distribution = .fillEqually
+        
+        updateButton.setTitle("수정하기", for: .normal)
+        updateButton.tintColor = .label
+        updateButton.backgroundColor = .lightGray
+        updateButton.layer.cornerRadius = 10
+        updateButton.layer.borderWidth = 3
+        updateButton.layer.borderColor = UIColor.white.cgColor
+        updateButton.addTarget(self, action: #selector(updateButtonClicked), for: .touchUpInside)
+        
+        deleteButton.setTitle("삭제하기", for: .normal)
+        deleteButton.tintColor = .label
+        deleteButton.backgroundColor = .lightGray
+        deleteButton.layer.cornerRadius = 10
+        deleteButton.layer.borderWidth = 3
+        deleteButton.layer.borderColor = UIColor.white.cgColor
+        deleteButton.addTarget(self, action: #selector(deleteButtonClicked), for: .touchUpInside)
     }
     
     @objc func xButtonClicked() {
         dismiss(animated: true)
     }
+    
+    @objc func updateButtonClicked() {
+        print(#function)
+    }
+    
+    @objc func deleteButtonClicked() {
+        guard let todo = todo else { return }
+        try! realm.write {
+            realm.delete(todo)
+        }
+        
+        dismiss(animated: true)
+        
+    }
+}
+
+protocol UpdateListDelegate: AnyObject {
+    func updateList()
 }
