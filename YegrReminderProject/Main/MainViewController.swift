@@ -16,8 +16,15 @@ final class MainViewController: BaseViewController {
     private let addListButton = UIButton()
     
     private let realm = try! Realm()
+    private var list: Results<TodoTable>!
     
     private var totalCount: Int = 0
+    
+    var todayList: [TodoTable] = []
+    var scheduleList: [TodoTable] = []
+    var totalList: [TodoTable] = []
+    var flagList: [TodoTable] = []
+    var completeList: [TodoTable] = []
     
     enum ButtonType: String, CaseIterable {
         case today = "오늘"
@@ -62,7 +69,14 @@ final class MainViewController: BaseViewController {
         
         configureCollectionView()
         updateTotalCount()
-        print(realm.configuration.fileURL)
+        // print(realm.configuration.fileURL)
+        updateCount()
+        print(">>> todayList.count \(todayList.count)")
+        print(">>> scheduleList.count \(scheduleList.count)")
+        print(">>> totalList.count \(totalList.count)")
+        print(">>> flagList.count \(flagList.count)")
+        print(">>> completeList.count \(completeList.count)")
+        
     }
     
     override func configureHierarchy() {
@@ -145,6 +159,39 @@ final class MainViewController: BaseViewController {
         collectionView.reloadData()
     }
     
+    func updateCount() {
+        let array = Array(self.realm.objects(TodoTable.self))
+        let todayText = DateFormatter.onlyDateFormatter.string(from: Date())
+        
+        todayList = array.filter {
+            if let deadline = $0.deadline {
+                let deadlineText = DateFormatter.onlyDateFormatter.string(from: deadline)
+                return deadlineText == todayText
+            } else {
+                return false
+            }
+        }
+        
+        scheduleList = array.filter {
+            if let deadline = $0.deadline {
+                let deadlineText = DateFormatter.onlyDateFormatter.string(from: deadline)
+                return deadlineText > todayText
+            } else {
+                return false
+            }
+        }
+        
+        totalList = Array(self.realm.objects(TodoTable.self))
+        
+        flagList = array.filter {
+            $0.flag == true
+        }
+        
+        completeList = array.filter {
+            $0.isDone == true
+        }
+    }
+    
     @objc func newTodoButtonClicked() {
         let registrationVC = RegistrationViewController()
         registrationVC.delegate = self
@@ -173,8 +220,21 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         cell.buttonImageView.tintColor = ButtonType.allCases[indexPath.row].color
         cell.buttonTitleLabel.text = ButtonType.allCases[indexPath.row].rawValue
         
+        switch indexPath.row {
+        case 0:
+            cell.titleCountLabel.text = "\(todayList.count)"
+        case 1:
+            cell.titleCountLabel.text = "\(scheduleList.count)"
+        case 2:
+            cell.titleCountLabel.text = "\(totalList.count)"
+        case 3:
+            cell.titleCountLabel.text = "\(flagList.count)"
+        case 4:
+            cell.titleCountLabel.text = "\(completeList.count)"
+        default:
+            break
+        }
         
-        cell.titleCountLabel.text = "\(totalCount)"
         return cell
     }
     
