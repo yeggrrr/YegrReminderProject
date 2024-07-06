@@ -19,14 +19,14 @@ final class MainViewController: BaseViewController {
     private var list: Results<TodoTable>!
     private var totalCount: Int = 0
     
-    let buttonList: [ButtonType] = [.today, .scheduled, .entire, .flag, .complete]
+    let buttonList: [ListFilterType] = [.today, .scheduled, .entire, .flag, .complete]
     var todayList: [TodoTable] = []
     var scheduleList: [TodoTable] = []
     var totalList: [TodoTable] = []
     var flagList: [TodoTable] = []
     var completeList: [TodoTable] = []
     
-    enum ButtonType: String, CaseIterable {
+    enum ListFilterType: String, CaseIterable {
         case today = "오늘"
         case scheduled = "예정"
         case entire = "전체"
@@ -200,9 +200,9 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainCollectionViewCell.id, for: indexPath) as? MainCollectionViewCell else { return UICollectionViewCell() }
-        cell.buttonImageView.image = UIImage(systemName: ButtonType.allCases[indexPath.row].imageName)
-        cell.buttonImageView.tintColor = ButtonType.allCases[indexPath.row].color
-        cell.buttonTitleLabel.text = ButtonType.allCases[indexPath.row].rawValue
+        cell.buttonImageView.image = UIImage(systemName: ListFilterType.allCases[indexPath.row].imageName)
+        cell.buttonImageView.tintColor = ListFilterType.allCases[indexPath.row].color
+        cell.buttonTitleLabel.text = ListFilterType.allCases[indexPath.row].rawValue
         
         cell.titleCountLabel.text = 
         switch buttonList[indexPath.item] {
@@ -225,7 +225,7 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         let listVC = ListViewController()
         listVC.delegate = self
         let type = buttonList[indexPath.item]
-        listVC.buttonType = type
+        listVC.listFilterType = type
         
         navigationController?.pushViewController(listVC, animated: true)
     }

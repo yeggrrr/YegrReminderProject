@@ -16,8 +16,10 @@ final class ListViewController: BaseViewController {
     private let realm = try! Realm()
     
     weak var delegate: UpdateListCountDelegate?
-    var buttonType: MainViewController.ButtonType?
+    var listFilterType: MainViewController.ListFilterType?
+    var detailFilterType: DetailFilterType?
     var filterList: [TodoTable] = []
+    var detailFilterList: [TodoTable] = []
     
     enum Priority: Int {
         case high = 0
@@ -36,6 +38,12 @@ final class ListViewController: BaseViewController {
         }
     }
     
+    enum DetailFilterType {
+        case closeToDeadline
+        case ascendingTitle
+        case lowToHighPriority
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -50,12 +58,12 @@ final class ListViewController: BaseViewController {
     }
     
     func filterData() {
-        guard let buttonType = buttonType else { return }
+        guard let listFilterType = listFilterType else { return }
         
         let objects = Array(realm.objects(TodoTable.self))
         let todayText = DateFormatter.onlyDateFormatter.string(from: Date())
         
-        switch buttonType {
+        switch listFilterType {
         case .today:
             filterList = objects.filter {
                 if let deadline = $0.deadline {
@@ -81,6 +89,31 @@ final class ListViewController: BaseViewController {
         case .complete:
             filterList = objects.filter { $0.isDone }
         }
+    }
+    
+    func detailFilterData(filterType: DetailFilterType) {
+        detailFilterType = filterType
+        
+        switch filterType {
+        case .closeToDeadline:
+            detailFilterList = filterList.sorted(by: { lhs, rhs in
+                let lhsDeadline = lhs.deadline ?? .distantFuture
+                let rhsDeadline = rhs.deadline ?? .distantFuture
+                return lhsDeadline < rhsDeadline
+            })
+        case .ascendingTitle:
+            detailFilterList = filterList.sorted(by: { lhs, rhs in
+                lhs.memoTitle < rhs.memoTitle
+            })
+        case .lowToHighPriority:
+            detailFilterList = filterList.sorted(by: { lhs, rhs in
+                let lhsPriority = lhs.priority ?? Priority.low.rawValue
+                let rhsPriority = rhs.priority ?? Priority.low.rawValue
+                return lhsPriority < rhsPriority
+            })
+        }
+        
+        listTableView.reloadData()
     }
     
     override func configureHierarchy() {
@@ -133,17 +166,19 @@ final class ListViewController: BaseViewController {
     @objc func filterButtonClicked() {
         let alert = UIAlertController(title: "정렬 & 핉터", message: nil, preferredStyle: .actionSheet)
         let deadline = UIAlertAction(title: "마감일 순으로 보기", style: .default) { _ in
-            self.filterList = Array(self.realm.objects(TodoTable.self).sorted(byKeyPath: "deadline", ascending: true))
-            self.listTableView.reloadData()
+            self.detailFilterData(filterType: .closeToDeadline)
         }
         
         let title = UIAlertAction(title: "제목 순으로 보기", style: .default) { _ in
-            self.filterList = Array(self.realm.objects(TodoTable.self).sorted(byKeyPath: "memoTitle", ascending: true))
-            self.listTableView.reloadData()
+            self.detailFilterData(filterType: .ascendingTitle)
         }
         
         let priority = UIAlertAction(title: "우선순위 낮은 순으로 보기", style: .default) { _ in
-            self.filterList = Array(self.realm.objects(TodoTable.self).sorted(byKeyPath: "priority", ascending: true))
+            self.detailFilterData(filterType: .lowToHighPriority)
+        }
+        
+        let orginally = UIAlertAction(title: "기본", style: .default) { _ in
+            self.detailFilterType = nil
             self.listTableView.reloadData()
         }
         
@@ -152,6 +187,7 @@ final class ListViewController: BaseViewController {
         alert.addAction(deadline)
         alert.addAction(title)
         alert.addAction(priority)
+        alert.addAction(orginally)
         alert.addAction(cancel)
         
         present(alert, animated: true)
@@ -187,7 +223,14 @@ extension ListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ListTableViewCell.id, for: indexPath) as? ListTableViewCell else { return UITableViewCell() }
-        let data = filterList[indexPath.row]
+        
+        let data: TodoTable =
+        if detailFilterType == nil {
+            filterList[indexPath.row]
+        } else {
+            detailFilterList[indexPath.row]
+        }
+
         cell.selectionStyle = .none
         cell.checkButton.tag = indexPath.row
         cell.titleLabel.text = data.memoTitle
