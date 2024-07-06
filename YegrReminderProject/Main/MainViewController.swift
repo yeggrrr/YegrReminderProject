@@ -107,6 +107,10 @@ final class MainViewController: BaseViewController {
     override func configureUI() {
         view.backgroundColor = .systemBackground
         
+        let left = UIBarButtonItem(image: UIImage(systemName: "calendar"), style: .plain, target: self, action: #selector(calendarButtonClicked))
+        navigationItem.leftBarButtonItem = left
+        navigationItem.leftBarButtonItem?.tintColor = .label
+        
         let right = UIBarButtonItem(image: UIImage(systemName: "ellipsis.circle"), style: .plain, target: self, action: #selector(filterButtonClicked))
         navigationItem.rightBarButtonItem = right
         navigationItem.rightBarButtonItem?.tintColor = .label
@@ -190,6 +194,13 @@ final class MainViewController: BaseViewController {
     
     @objc func filterButtonClicked() {
         print(#function)
+    }
+    
+    @objc func calendarButtonClicked() {
+        print(#function)
+        
+        let vc = CalendarViewController()
+        navigationController?.pushViewController(vc, animated: true)
     }
 }
 

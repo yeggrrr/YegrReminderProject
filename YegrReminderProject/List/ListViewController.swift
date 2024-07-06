@@ -194,8 +194,8 @@ final class ListViewController: BaseViewController {
     }
     
     @objc func completeButtonClicked(_ sender: UIButton) {
-        let data = realm.objects(TodoTable.self)
-        let result = data[sender.tag]
+        let datas: [TodoTable] = detailFilterType == nil ? filterList : detailFilterList
+        let result = datas[sender.tag]
         
         do {
             switch result.isDone {
@@ -236,12 +236,6 @@ extension ListViewController: UITableViewDataSource {
         cell.titleLabel.text = data.memoTitle
         cell.memoLabel.text = data.content
         
-        if data.isDone {
-            cell.checkButton.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .normal)
-        } else {
-            cell.checkButton.setImage(UIImage(systemName: "circle"), for: .normal)
-        }
-        
         cell.flagImageView.image = UIImage(systemName: "flag.fill")
         cell.flagImageView.isHidden = !data.flag
         
@@ -261,6 +255,12 @@ extension ListViewController: UITableViewDataSource {
             cell.priorityView.backgroundColor = Priority(rawValue: priority)?.color
         } else {
             cell.priorityView.backgroundColor = .clear
+        }
+        
+        if data.isDone {
+            cell.checkButton.setImage(UIImage(systemName: "checkmark.circle.fill"), for: .normal)
+        } else {
+            cell.checkButton.setImage(UIImage(systemName: "circle"), for: .normal)
         }
         
         cell.checkButton.addTarget(self, action: #selector(completeButtonClicked(_:)), for: .touchUpInside)
