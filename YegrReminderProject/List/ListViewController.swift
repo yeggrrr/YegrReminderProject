@@ -21,6 +21,7 @@ final class ListViewController: BaseViewController {
     var detailFilterType: DetailFilterType?
     var filterList: [TodoTable] = []
     var detailFilterList: [TodoTable] = []
+    var searchedList: [TodoTable] = []
     
     enum Priority: Int {
         case high = 0
@@ -151,6 +152,9 @@ final class ListViewController: BaseViewController {
         currentTitleLabel.text = listFilterType?.rawValue
         currentTitleLabel.textColor = .systemBlue
         currentTitleLabel.font = .systemFont(ofSize: 35, weight: .bold)
+        
+        searchBar.placeholder = "제목이나 내용을 입력해주세요"
+        searchBar.delegate = self
     }
     
     private func configureTableView() {
@@ -214,14 +218,20 @@ final class ListViewController: BaseViewController {
 
 extension ListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return filterList.count
+        if searchedList.isEmpty {
+            return filterList.count
+        } else {
+            return searchedList.count
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ListTableViewCell.id, for: indexPath) as? ListTableViewCell else { return UITableViewCell() }
         
         let data: TodoTable =
-        if detailFilterType == nil {
+        if !searchedList.isEmpty {
+            searchedList[indexPath.row]
+        } else if detailFilterType == nil {
             filterList[indexPath.row]
         } else {
             detailFilterList[indexPath.row]
@@ -266,7 +276,12 @@ extension ListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let vc = DetailViewController()
-        vc.todo = filterList[indexPath.row]
+        if searchedList.isEmpty {
+            vc.todo = filterList[indexPath.row]
+        } else {
+            vc.todo = searchedList[indexPath.row]
+        }
+        
         vc.delegate = self
         present(vc,animated: true)
     }
@@ -274,10 +289,17 @@ extension ListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let delete = UIContextualAction(style: .normal, title: "삭제") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
             try! self.realm.write {
-                let data = self.filterList[indexPath.row]
-                self.removeImageFromDocument(filename: "\(data.id)")
-                self.realm.delete(self.filterList[indexPath.row])
-                self.listTableView.reloadData()
+                if self.searchedList.isEmpty {
+                    let data = self.searchedList[indexPath.row]
+                    self.removeImageFromDocument(filename: "\(data.id)")
+                    self.realm.delete(self.searchedList[indexPath.row])
+                    self.listTableView.reloadData()
+                } else {
+                    let data = self.filterList[indexPath.row]
+                    self.removeImageFromDocument(filename: "\(data.id)")
+                    self.realm.delete(self.filterList[indexPath.row])
+                    self.listTableView.reloadData()
+                }
             }
             
             success(true)
@@ -327,6 +349,36 @@ extension ListViewController: UITableViewDataSource {
 extension ListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100
+    }
+}
+
+extension ListViewController: UISearchBarDelegate {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
+        if searchText.isEmpty {
+            searchedList = []
+            navigationItem.rightBarButtonItem?.isEnabled = true
+        } else {
+            let data: [TodoTable] =
+            if detailFilterType == nil {
+                filterList
+            } else {
+                detailFilterList
+            }
+            
+            searchedList = data.filter {
+                let titleContains = $0.memoTitle.contains(searchText)
+                
+                if let content = $0.content {
+                    let contentContains = content.contains(searchText)
+                    return titleContains || contentContains
+                } else {
+                    return titleContains
+                }
+            }
+            navigationItem.rightBarButtonItem?.isEnabled = false
+        }
+        
+        listTableView.reloadData()
     }
 }
 
