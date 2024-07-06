@@ -14,7 +14,9 @@ final class ListViewController: BaseViewController {
     private let listTableView = UITableView()
     
     private let realm = try! Realm()
-    private var list: Results<TodoTable>!
+    // private var list: Results<TodoTable>!
+    
+    var filterList: [TodoTable] = []
     
     enum Priority: Int {
         case high = 0
@@ -68,17 +70,17 @@ final class ListViewController: BaseViewController {
         currentTitleLabel.textColor = .systemBlue
         currentTitleLabel.font = .systemFont(ofSize: 35, weight: .bold)
         
-        fetch()
+        // fetch()
     }
     
     private func reloadData() {
-        fetch()
+        // fetch()
         self.listTableView.reloadData()
     }
     
-    private func fetch() {
-        list = realm.objects(TodoTable.self)
-    }
+    // private func fetch() {
+    //     filterList = Array(realm.objects(TodoTable.self))
+    // }
     
     private func configureTableView() {
         listTableView.delegate = self
@@ -89,17 +91,17 @@ final class ListViewController: BaseViewController {
     @objc func filterButtonClicked() {
         let alert = UIAlertController(title: "정렬 & 핉터", message: nil, preferredStyle: .actionSheet)
         let deadline = UIAlertAction(title: "마감일 순으로 보기", style: .default) { _ in
-            self.list = self.realm.objects(TodoTable.self).sorted(byKeyPath: "deadline", ascending: true)
+            self.filterList = Array(self.realm.objects(TodoTable.self).sorted(byKeyPath: "deadline", ascending: true))
             self.listTableView.reloadData()
         }
         
         let title = UIAlertAction(title: "제목 순으로 보기", style: .default) { _ in
-            self.list = self.realm.objects(TodoTable.self).sorted(byKeyPath: "memoTitle", ascending: true)
+            self.filterList = Array(self.realm.objects(TodoTable.self).sorted(byKeyPath: "memoTitle", ascending: true))
             self.listTableView.reloadData()
         }
         
         let priority = UIAlertAction(title: "우선순위 낮은 순으로 보기", style: .default) { _ in
-            self.list = self.realm.objects(TodoTable.self).sorted(byKeyPath: "priority", ascending: true)
+            self.filterList = Array(self.realm.objects(TodoTable.self).sorted(byKeyPath: "priority", ascending: true))
             self.listTableView.reloadData()
         }
         
@@ -111,13 +113,11 @@ final class ListViewController: BaseViewController {
         alert.addAction(cancel)
         
         present(alert, animated: true)
-        
     }
     
     @objc func completeButtonClicked(_ sender: UIButton) {
         let data = realm.objects(TodoTable.self)
         let result = data[sender.tag]
-        
         
         do {
             switch result.isDone {
@@ -140,12 +140,12 @@ final class ListViewController: BaseViewController {
 
 extension ListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return list.count
+        return filterList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ListTableViewCell.id, for: indexPath) as? ListTableViewCell else { return UITableViewCell() }
-        let data = list[indexPath.row]
+        let data = filterList[indexPath.row]
         cell.selectionStyle = .none
         cell.checkButton.tag = indexPath.row
         cell.titleLabel.text = data.memoTitle
@@ -185,16 +185,16 @@ extension ListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let vc = DetailViewController()
-        vc.todo = list[indexPath.row]
+        vc.todo = filterList[indexPath.row]
         present(vc,animated: true)
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let delete = UIContextualAction(style: .normal, title: "삭제") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
             try! self.realm.write {
-                let data = self.list[indexPath.row]
+                let data = self.filterList[indexPath.row]
                 self.removeImageFromDocument(filename: "\(data.id)")
-                self.realm.delete(self.list[indexPath.row])
+                self.realm.delete(self.filterList[indexPath.row])
                 self.listTableView.reloadData()
             }
             

@@ -240,7 +240,24 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let listVC = ListViewController()
+        
+        switch indexPath.row {
+        case 0:
+            listVC.filterList = todayList
+        case 1:
+            listVC.filterList = scheduleList
+        case 2:
+            listVC.filterList = totalList
+        case 3:
+            listVC.filterList = flagList
+        case 4:
+            listVC.filterList = completeList
+        default:
+            break
+        }
+        
         navigationController?.pushViewController(listVC, animated: true)
+       
     }
 }
 
