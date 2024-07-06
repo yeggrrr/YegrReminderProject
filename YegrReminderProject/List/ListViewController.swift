@@ -11,6 +11,7 @@ import RealmSwift
 
 final class ListViewController: BaseViewController {
     private let currentTitleLabel = UILabel()
+    private let searchBar = UISearchBar()
     private let listTableView = UITableView()
     
     private let realm = try! Realm()
@@ -118,6 +119,7 @@ final class ListViewController: BaseViewController {
     
     override func configureHierarchy() {
         view.addSubview(currentTitleLabel)
+        view.addSubview(searchBar)
         view.addSubview(listTableView)
     }
     
@@ -128,8 +130,13 @@ final class ListViewController: BaseViewController {
             $0.height.equalTo(40)
         }
         
+        searchBar.snp.makeConstraints {
+            $0.top.equalTo(currentTitleLabel.snp.bottom).offset(10)
+            $0.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
+        }
+        
         listTableView.snp.makeConstraints {
-            $0.top.equalTo(currentTitleLabel.snp.bottom).offset(20)
+            $0.top.equalTo(searchBar.snp.bottom)
             $0.horizontalEdges.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
