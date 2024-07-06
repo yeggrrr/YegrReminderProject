@@ -16,6 +16,8 @@ final class ListViewController: BaseViewController {
     private let realm = try! Realm()
     // private var list: Results<TodoTable>!
     
+    var buttonType: MainViewController.ButtonType?
+    
     var filterList: [TodoTable] = []
     
     enum Priority: Int {

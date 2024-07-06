@@ -17,9 +17,9 @@ final class MainViewController: BaseViewController {
     
     private let realm = try! Realm()
     private var list: Results<TodoTable>!
-    
     private var totalCount: Int = 0
     
+    let buttonList: [ButtonType] = [.today, .scheduled, .entire, .flag, .complete]
     var todayList: [TodoTable] = []
     var scheduleList: [TodoTable] = []
     var totalList: [TodoTable] = []
@@ -69,14 +69,8 @@ final class MainViewController: BaseViewController {
         
         configureCollectionView()
         updateTotalCount()
-        // print(realm.configuration.fileURL)
         updateCount()
-        print(">>> todayList.count \(todayList.count)")
-        print(">>> scheduleList.count \(scheduleList.count)")
-        print(">>> totalList.count \(totalList.count)")
-        print(">>> flagList.count \(flagList.count)")
-        print(">>> completeList.count \(completeList.count)")
-        
+        // print(realm.configuration.fileURL)
     }
     
     override func configureHierarchy() {
@@ -182,14 +176,8 @@ final class MainViewController: BaseViewController {
         }
         
         totalList = Array(self.realm.objects(TodoTable.self))
-        
-        flagList = array.filter {
-            $0.flag == true
-        }
-        
-        completeList = array.filter {
-            $0.isDone == true
-        }
+        flagList = array.filter { $0.flag }
+        completeList = array.filter { $0.isDone }
     }
     
     @objc func newTodoButtonClicked() {
@@ -211,7 +199,7 @@ final class MainViewController: BaseViewController {
 
 extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        5
+        return buttonList.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -220,19 +208,18 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
         cell.buttonImageView.tintColor = ButtonType.allCases[indexPath.row].color
         cell.buttonTitleLabel.text = ButtonType.allCases[indexPath.row].rawValue
         
-        switch indexPath.row {
-        case 0:
-            cell.titleCountLabel.text = "\(todayList.count)"
-        case 1:
-            cell.titleCountLabel.text = "\(scheduleList.count)"
-        case 2:
-            cell.titleCountLabel.text = "\(totalList.count)"
-        case 3:
-            cell.titleCountLabel.text = "\(flagList.count)"
-        case 4:
-            cell.titleCountLabel.text = "\(completeList.count)"
-        default:
-            break
+        cell.titleCountLabel.text = 
+        switch buttonList[indexPath.item] {
+        case .today:
+            "\(todayList.count)"
+        case .scheduled:
+            "\(scheduleList.count)"
+        case .entire:
+            "\(totalList.count)"
+        case .flag:
+            "\(flagList.count)"
+        case .complete:
+            "\(completeList.count)"
         }
         
         return cell
@@ -241,23 +228,10 @@ extension MainViewController: UICollectionViewDelegate, UICollectionViewDataSour
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let listVC = ListViewController()
         
-        switch indexPath.row {
-        case 0:
-            listVC.filterList = todayList
-        case 1:
-            listVC.filterList = scheduleList
-        case 2:
-            listVC.filterList = totalList
-        case 3:
-            listVC.filterList = flagList
-        case 4:
-            listVC.filterList = completeList
-        default:
-            break
-        }
+        let type = buttonList[indexPath.item]
+        listVC.buttonType = type
         
         navigationController?.pushViewController(listVC, animated: true)
-       
     }
 }
 
