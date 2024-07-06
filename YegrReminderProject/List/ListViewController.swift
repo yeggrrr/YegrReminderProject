@@ -318,8 +318,7 @@ extension ListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let flag = UIContextualAction(style: .normal, title: "") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
-            let data = self.realm.objects(TodoTable.self)
-            let result = data[indexPath.row]
+            let result = self.filterList[indexPath.row]
             
             do {
                 switch result.flag {
