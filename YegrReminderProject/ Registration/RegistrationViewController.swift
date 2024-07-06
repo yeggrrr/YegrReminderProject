@@ -31,6 +31,8 @@ final class RegistrationViewController: BaseViewController {
         (.title, ""), (.deadline, ""), (.tag, ""), (.priority, ""), (.addImage, "")
     ]
     
+    var viewType: ViewType = .add
+    
     enum AddOption: Int, CaseIterable {
         case title
         case deadline
@@ -63,6 +65,11 @@ final class RegistrationViewController: BaseViewController {
         }
     }
     
+    enum ViewType {
+        case add
+        case update
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -87,7 +94,9 @@ final class RegistrationViewController: BaseViewController {
     
     override func configureUI() {
         view.backgroundColor = .systemBackground
-        navigationItem.title = "새로운 할 일"
+        
+        let navigationTitle = viewType == .add ? "새로운 할 일" : "수정하기"
+        navigationItem.title = navigationTitle
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
         navigationItem.backBarButtonItem?.tintColor = .systemBlue
         
@@ -95,7 +104,8 @@ final class RegistrationViewController: BaseViewController {
         navigationItem.leftBarButtonItem = left
         navigationItem.leftBarButtonItem?.tintColor = .systemBlue
         
-        let right = UIBarButtonItem(title: "추가", style: .plain, target: self, action: #selector(addButtonClicked))
+        let rightBarButtonTitle = viewType == .add ? "추가" : "수정"
+        let right = UIBarButtonItem(title: rightBarButtonTitle, style: .plain, target: self, action: #selector(addButtonClicked))
         navigationItem.rightBarButtonItem = right
         navigationItem.rightBarButtonItem?.tintColor = .systemBlue
         navigationItem.rightBarButtonItem?.isEnabled = false

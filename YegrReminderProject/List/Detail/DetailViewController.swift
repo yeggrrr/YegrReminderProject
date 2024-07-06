@@ -125,7 +125,10 @@ final class DetailViewController: BaseViewController {
     }
     
     @objc func updateButtonClicked() {
-        print(#function)
+        let vc = RegistrationViewController()
+        vc.viewType = .update
+        let nav = UINavigationController(rootViewController: vc)
+        present(nav, animated: true)
     }
     
     @objc func deleteButtonClicked() {
