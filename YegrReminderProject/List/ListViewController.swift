@@ -144,18 +144,7 @@ final class ListViewController: BaseViewController {
         currentTitleLabel.text = listFilterType?.rawValue
         currentTitleLabel.textColor = .systemBlue
         currentTitleLabel.font = .systemFont(ofSize: 35, weight: .bold)
-        
-        // fetch()
     }
-    
-    private func reloadData() {
-        // fetch()
-        self.listTableView.reloadData()
-    }
-    
-    // private func fetch() {
-    //     filterList = Array(realm.objects(TodoTable.self))
-    // }
     
     private func configureTableView() {
         listTableView.delegate = self
@@ -212,7 +201,7 @@ final class ListViewController: BaseViewController {
             print(error)
         }
         
-        reloadData()
+        listTableView.reloadData()
     }
 }
 
