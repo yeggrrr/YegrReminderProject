@@ -103,20 +103,10 @@ final class DetailViewController: BaseViewController {
         buttonStackView.spacing = 10
         buttonStackView.distribution = .fillEqually
         
-        updateButton.setTitle("수정하기", for: .normal)
-        updateButton.tintColor = .label
-        updateButton.backgroundColor = .lightGray
-        updateButton.layer.cornerRadius = 10
-        updateButton.layer.borderWidth = 3
-        updateButton.layer.borderColor = UIColor.white.cgColor
+        updateButton.setUI(title: "수정하기")
         updateButton.addTarget(self, action: #selector(updateButtonClicked), for: .touchUpInside)
         
-        deleteButton.setTitle("삭제하기", for: .normal)
-        deleteButton.tintColor = .label
-        deleteButton.backgroundColor = .lightGray
-        deleteButton.layer.cornerRadius = 10
-        deleteButton.layer.borderWidth = 3
-        deleteButton.layer.borderColor = UIColor.white.cgColor
+        deleteButton.setUI(title: "삭제하기")
         deleteButton.addTarget(self, action: #selector(deleteButtonClicked), for: .touchUpInside)
     }
     
