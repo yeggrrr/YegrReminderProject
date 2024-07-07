@@ -12,32 +12,30 @@ import RealmSwift
 
 class CalendarViewController: UIViewController {
     fileprivate weak var todoCalendar: FSCalendar!
+    let calendar = FSCalendar(frame: CGRect(x: 0, y: 0, width: 320, height: 300))
     private let todotableView = UITableView()
     private let realm = try! Realm()
     
     var targetDateList: [TodoTable] = []
+    var events: [String] = []
+    var eventsDate: [Date] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         configureCalendar()
         configureTableView()
+        configureUI()
+    }
+    
+    func configureUI() {
+        view.backgroundColor = .clear
+        title = "마감일 일정 조회"
     }
     
     func configureCalendar() {
-        view.backgroundColor = .clear
-        
-        let calendar = FSCalendar(frame: CGRect(x: 0, y: 0, width: 320, height: 300))
         calendar.dataSource = self
         calendar.delegate = self
-        view.addSubview(calendar)
-        self.todoCalendar = calendar
-        
-        calendar.locale = Locale(identifier: "ko_KR")
-        calendar.backgroundColor = .lightGray
-        calendar.layer.cornerRadius = 10
-        calendar.layer.borderWidth = 3
-        calendar.layer.borderColor = UIColor.white.cgColor
         
         view.addSubview(calendar)
         calendar.snp.makeConstraints {
@@ -46,24 +44,28 @@ class CalendarViewController: UIViewController {
             $0.height.equalTo(350)
         }
         
-        todoCalendar.calendarWeekdayView.weekdayLabels[0].text = "일"
-        todoCalendar.calendarWeekdayView.weekdayLabels[1].text = "월"
-        todoCalendar.calendarWeekdayView.weekdayLabels[2].text = "화"
-        todoCalendar.calendarWeekdayView.weekdayLabels[3].text = "수"
-        todoCalendar.calendarWeekdayView.weekdayLabels[4].text = "목"
-        todoCalendar.calendarWeekdayView.weekdayLabels[5].text = "금"
-        todoCalendar.calendarWeekdayView.weekdayLabels[6].text = "토"
+        calendar.locale = Locale(identifier: "ko_KR")
+        calendar.backgroundColor = .lightGray
+        calendar.layer.cornerRadius = 10
+        calendar.layer.borderWidth = 3
+        calendar.layer.borderColor = UIColor.white.cgColor
         
-        todoCalendar.scrollEnabled = true
+        self.todoCalendar = calendar
         todoCalendar.scrollDirection = .horizontal
+        todoCalendar.scrollEnabled = true
         
+        todoCalendar.headerHeight = 60
         todoCalendar.appearance.headerDateFormat = "YYYY년 MM월"
         todoCalendar.appearance.headerTitleAlignment = .center
+        todoCalendar.appearance.headerTitleColor = .black
+        todoCalendar.appearance.headerMinimumDissolvedAlpha = 0
         
         todoCalendar.appearance.weekdayFont = UIFont.systemFont(ofSize: 17, weight: .bold)
-        todoCalendar.appearance.titleFont = UIFont.systemFont(ofSize: 17, weight: .semibold)
-        todoCalendar.appearance.weekdayTextColor = UIColor.darkGray
-        todoCalendar.appearance.todayColor = UIColor.darkGray
+        todoCalendar.appearance.weekdayTextColor = UIColor.darkText
+        todoCalendar.appearance.titleFont = UIFont.systemFont(ofSize: 17, weight: .regular)
+        todoCalendar.appearance.titleWeekendColor = .systemRed
+        todoCalendar.appearance.titleTodayColor = .black
+        todoCalendar.appearance.todayColor = UIColor.white
     }
     
     func configureTableView() {
@@ -82,15 +84,11 @@ class CalendarViewController: UIViewController {
     }
     
     func fetchTargetDateList(date: Date) {
-        let df = DateFormatter()
-        df.dateFormat = "yyyyMMdd"
-        df.locale = Locale(identifier: "ko_KR")
-        
-        let targetDateText = df.string(from: date)
+        let targetDateText = DateFormatter.onlyDateFormatter.string(from: date)
         let objects = Array(realm.objects(TodoTable.self))
         targetDateList = objects.filter { todoTable in
             if let deadline = todoTable.deadline {
-                let deadlineText = df.string(from: deadline)
+                let deadlineText = DateFormatter.onlyDateFormatter.string(from: deadline)
                 return deadlineText == targetDateText
             }
             
@@ -106,6 +104,7 @@ extension CalendarViewController: FSCalendarDelegate, FSCalendarDataSource, FSCa
         calendar.snp.updateConstraints {
             $0.height.equalTo(bounds.height)
         }
+        
         self.view.layoutIfNeeded()
     }
     
