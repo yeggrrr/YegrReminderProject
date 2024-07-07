@@ -69,7 +69,6 @@ final class MainViewController: BaseViewController {
         
         configureCollectionView()
         updateCount()
-        // print(realm.configuration.fileURL)
     }
     
     override func configureHierarchy() {
@@ -197,8 +196,6 @@ final class MainViewController: BaseViewController {
     }
     
     @objc func calendarButtonClicked() {
-        print(#function)
-        
         let vc = CalendarViewController()
         navigationController?.pushViewController(vc, animated: true)
     }

@@ -12,38 +12,81 @@ import RealmSwift
 
 class CalendarViewController: UIViewController {
     fileprivate weak var todoCalendar: FSCalendar!
-    let calendar = FSCalendar(frame: CGRect(x: 0, y: 0, width: 320, height: 300))
+    private let calendar = FSCalendar(frame: CGRect(x: 0, y: 0, width: 320, height: 300))
+    private let dropDownButton = UIButton()
     private let todotableView = UITableView()
     private let realm = try! Realm()
     
-    var targetDateList: [TodoTable] = []
-    var events: [String] = []
-    var eventsDate: [Date] = []
+    private var targetDateList: [TodoTable] = []
+    private var events: [String] = []
+    private var eventsDate: [Date] = []
+    
+    private var dropDownState = false
+    
+    enum DropDownState {
+        case up
+        case down
+        
+        var buttonImage: String {
+            switch self {
+            case .up:
+                "chevron.down"
+            case .down:
+                "chevron.up"
+            }
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        configureCalendar()
-        configureTableView()
+        configureObjects()
+        configureHierarchy()
+        configureLayout()
         configureUI()
     }
     
-    func configureUI() {
-        view.backgroundColor = .clear
-        title = "마감일 일정 조회"
-    }
-    
-    func configureCalendar() {
+    func configureObjects() {
         calendar.dataSource = self
         calendar.delegate = self
         
+        todotableView.delegate = self
+        todotableView.dataSource = self
+        todotableView.register(TodoTableViewCell.self, forCellReuseIdentifier: TodoTableViewCell.id)
+    }
+    
+    func configureHierarchy() {
         view.addSubview(calendar)
+        view.addSubview(dropDownButton)
+        view.addSubview(todotableView)
+    }
+    
+    
+    func configureLayout() {
         calendar.snp.makeConstraints {
             $0.top.equalTo(view.safeAreaLayoutGuide).offset(10)
             $0.horizontalEdges.equalTo(view.safeAreaLayoutGuide).inset(10)
             $0.height.equalTo(350)
         }
         
+        dropDownButton.snp.makeConstraints {
+            $0.top.equalTo(calendar.snp.bottom)
+            $0.centerX.equalTo(calendar.snp.centerX)
+            $0.height.equalTo(30)
+        }
+        
+        todotableView.snp.makeConstraints {
+            $0.top.equalTo(dropDownButton.snp.bottom).offset(10)
+            $0.horizontalEdges.equalTo(calendar.snp.horizontalEdges)
+            $0.bottom.equalTo(view.safeAreaLayoutGuide)
+        }
+    }
+    
+    func configureUI() {
+        // view
+        view.backgroundColor = .systemBackground
+        title = "마감일 일정 조회"
+        // calendar
         calendar.locale = Locale(identifier: "ko_KR")
         calendar.backgroundColor = .lightGray
         calendar.layer.cornerRadius = 10
@@ -66,20 +109,12 @@ class CalendarViewController: UIViewController {
         todoCalendar.appearance.titleWeekendColor = .systemRed
         todoCalendar.appearance.titleTodayColor = .black
         todoCalendar.appearance.todayColor = UIColor.white
-    }
-    
-    func configureTableView() {
-        todotableView.delegate = self
-        todotableView.dataSource = self
-        todotableView.register(TodoTableViewCell.self, forCellReuseIdentifier: TodoTableViewCell.id)
-        
-        view.addSubview(todotableView)
-        todotableView.snp.makeConstraints {
-            $0.top.equalTo(todoCalendar.snp.bottom).offset(10)
-            $0.horizontalEdges.equalTo(todoCalendar.snp.horizontalEdges)
-            $0.bottom.equalTo(view.safeAreaLayoutGuide)
-        }
-        
+        todoCalendar.scope = .week
+        // dropDownButton
+        dropDownButton.setImage(UIImage(systemName: "chevron.down"), for: .normal)
+        dropDownButton.tintColor = .label
+        dropDownButton.addTarget(self, action: #selector(underDropButtonClicked), for: .touchUpInside)
+        // tableView
         todotableView.backgroundColor = .systemBackground
     }
     
@@ -96,6 +131,18 @@ class CalendarViewController: UIViewController {
         }
         
         todotableView.reloadData()
+    }
+    
+    @objc func underDropButtonClicked() {
+        dropDownState.toggle()
+        
+        if dropDownState {
+            dropDownButton.setImage(UIImage(systemName: DropDownState.down.buttonImage), for: .normal)
+            todoCalendar.scope = .month
+        } else {
+            dropDownButton.setImage(UIImage(systemName: DropDownState.up.buttonImage), for: .normal)
+            todoCalendar.scope = .week
+        }
     }
 }
 
