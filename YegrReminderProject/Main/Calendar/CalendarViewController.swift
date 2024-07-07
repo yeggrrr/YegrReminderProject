@@ -8,10 +8,14 @@
 import UIKit
 import FSCalendar
 import SnapKit
+import RealmSwift
 
 class CalendarViewController: UIViewController {
     fileprivate weak var todoCalendar: FSCalendar!
     private let todotableView = UITableView()
+    private let realm = try! Realm()
+    
+    var targetDateList: [TodoTable] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -76,6 +80,25 @@ class CalendarViewController: UIViewController {
         
         todotableView.backgroundColor = .systemBackground
     }
+    
+    func fetchTargetDateList(date: Date) {
+        let df = DateFormatter()
+        df.dateFormat = "yyyyMMdd"
+        df.locale = Locale(identifier: "ko_KR")
+        
+        let targetDateText = df.string(from: date)
+        let objects = Array(realm.objects(TodoTable.self))
+        targetDateList = objects.filter { todoTable in
+            if let deadline = todoTable.deadline {
+                let deadlineText = df.string(from: deadline)
+                return deadlineText == targetDateText
+            }
+            
+            return false
+        }
+        
+        todotableView.reloadData()
+    }
 }
 
 extension CalendarViewController: FSCalendarDelegate, FSCalendarDataSource, FSCalendarDelegateAppearance {
@@ -93,6 +116,10 @@ extension CalendarViewController: FSCalendarDelegate, FSCalendarDataSource, FSCa
     func calendar(_ calendar: FSCalendar, appearance: FSCalendarAppearance, borderSelectionColorFor date: Date) -> UIColor? {
         return UIColor.white.withAlphaComponent(1.0)
     }
+    
+    func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
+        fetchTargetDateList(date: date)
+    }
 }
 
 extension CalendarViewController: UITableViewDelegate, UITableViewDataSource {
@@ -101,11 +128,14 @@ extension CalendarViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        10
+        return targetDateList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: TodoTableViewCell.id, for: indexPath) as? TodoTableViewCell else { return UITableViewCell() }
+        let item = targetDateList[indexPath.row]
+        cell.titleLabel.text = item.memoTitle
+        cell.memoLabel.text = item.content
         cell.selectionStyle = .none
         return cell
     }
