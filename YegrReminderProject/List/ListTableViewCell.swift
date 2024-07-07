@@ -9,6 +9,7 @@ import UIKit
 import SnapKit
 
 final class ListTableViewCell: BaseTableViewCell {
+    let lineView = UIView()
     let priorityView = UIView()
     let titleLabel = UILabel()
     let memoLabel = UILabel()
@@ -28,6 +29,7 @@ final class ListTableViewCell: BaseTableViewCell {
     
     override func configureHierarchy() {
         contentView.addSubview(checkButton)
+        contentView.addSubview(lineView)
         contentView.addSubview(titleLabel)
         contentView.addSubview(flagImageView)
         contentView.addSubview(priorityView)
@@ -45,9 +47,15 @@ final class ListTableViewCell: BaseTableViewCell {
             $0.width.equalTo(40)
         }
         
+        lineView.snp.makeConstraints {
+            $0.top.bottom.equalTo(safeArea).inset(5)
+            $0.leading.equalTo(checkButton.snp.trailing).offset(3)
+            $0.width.equalTo(2)
+        }
+        
         titleLabel.snp.makeConstraints {
             $0.top.equalTo(safeArea)
-            $0.leading.equalTo(checkButton.snp.trailing).offset(10)
+            $0.leading.equalTo(lineView.snp.trailing).offset(10)
             $0.height.equalTo(30)
         }
         
@@ -65,7 +73,7 @@ final class ListTableViewCell: BaseTableViewCell {
         
         memoLabel.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom)
-            $0.leading.equalTo(checkButton.snp.trailing).offset(10)
+            $0.leading.equalTo(lineView.snp.trailing).offset(10)
             $0.trailing.equalTo(priorityView.snp.leading).offset(-10)
             $0.bottom.equalTo(deadlineLabel.snp.top)
         }
@@ -73,7 +81,7 @@ final class ListTableViewCell: BaseTableViewCell {
         deadlineLabel.snp.makeConstraints {
             $0.top.equalTo(memoLabel.snp.bottom)
             $0.bottom.equalTo(safeArea).offset(-10)
-            $0.leading.equalTo(checkButton.snp.trailing).offset(10)
+            $0.leading.equalTo(lineView.snp.trailing).offset(10)
             $0.height.equalTo(20)
         }
         
@@ -87,6 +95,8 @@ final class ListTableViewCell: BaseTableViewCell {
     override func configureUI() {
         checkButton.setImage(UIImage(systemName: "circle"), for: .normal)
         checkButton.tintColor = .darkGray
+        
+        lineView.backgroundColor = .systemCyan
         
         titleLabel.setUI(txtColor: .label, fontStyle: .systemFont(ofSize: 17, weight: .black), txtAlignment: .left)
         memoLabel.setUI(txtColor: .lightGray, fontStyle: .systemFont(ofSize: 16, weight: .regular), txtAlignment: .left)
