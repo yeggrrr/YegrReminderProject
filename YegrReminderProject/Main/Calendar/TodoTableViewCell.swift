@@ -46,7 +46,7 @@ class TodoTableViewCell: BaseTableViewCell {
         titleLabel.text = "제목제목"
         memoLabel.text = "메모다냐오옹메모다냐오옹메모다냐오옹메모다냐오옹메모다냐오옹메모다냐오옹"
         
-        lineView.backgroundColor = .lightGray
+        lineView.backgroundColor = .systemCyan
         titleLabel.setUI(txtColor: .label, fontStyle: .systemFont(ofSize: 17, weight: .semibold), txtAlignment: .left)
         memoLabel.setUI(txtColor: .lightGray, fontStyle: .systemFont(ofSize: 15, weight: .regular), txtAlignment: .left)
         memoLabel.numberOfLines = 2

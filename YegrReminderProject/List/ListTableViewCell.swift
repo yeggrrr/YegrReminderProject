@@ -55,7 +55,7 @@ final class ListTableViewCell: BaseTableViewCell {
         
         titleLabel.snp.makeConstraints {
             $0.top.equalTo(safeArea)
-            $0.leading.equalTo(lineView.snp.trailing).offset(10)
+            $0.leading.equalTo(lineView.snp.trailing).offset(15)
             $0.height.equalTo(30)
         }
         
@@ -73,7 +73,7 @@ final class ListTableViewCell: BaseTableViewCell {
         
         memoLabel.snp.makeConstraints {
             $0.top.equalTo(titleLabel.snp.bottom)
-            $0.leading.equalTo(lineView.snp.trailing).offset(10)
+            $0.leading.equalTo(lineView.snp.trailing).offset(15)
             $0.trailing.equalTo(priorityView.snp.leading).offset(-10)
             $0.bottom.equalTo(deadlineLabel.snp.top)
         }
@@ -81,7 +81,7 @@ final class ListTableViewCell: BaseTableViewCell {
         deadlineLabel.snp.makeConstraints {
             $0.top.equalTo(memoLabel.snp.bottom)
             $0.bottom.equalTo(safeArea).offset(-10)
-            $0.leading.equalTo(lineView.snp.trailing).offset(10)
+            $0.leading.equalTo(lineView.snp.trailing).offset(15)
             $0.height.equalTo(20)
         }
         
@@ -94,7 +94,7 @@ final class ListTableViewCell: BaseTableViewCell {
     
     override func configureUI() {
         checkButton.setImage(UIImage(systemName: "circle"), for: .normal)
-        checkButton.tintColor = .darkGray
+        checkButton.tintColor = .systemCyan
         
         lineView.backgroundColor = .systemCyan
         
