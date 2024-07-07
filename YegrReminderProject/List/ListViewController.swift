@@ -150,7 +150,7 @@ final class ListViewController: BaseViewController {
         navigationItem.rightBarButtonItem?.tintColor = .label
         
         currentTitleLabel.text = listFilterType?.rawValue
-        currentTitleLabel.textColor = .systemBlue
+        currentTitleLabel.textColor = .label
         currentTitleLabel.font = .systemFont(ofSize: 35, weight: .bold)
         
         searchBar.placeholder = "제목이나 내용을 입력해주세요"

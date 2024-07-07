@@ -101,16 +101,16 @@ final class RegistrationViewController: BaseViewController {
         let navigationTitle = viewType == .add ? "새로운 할 일" : "수정하기"
         navigationItem.title = navigationTitle
         navigationItem.backBarButtonItem = UIBarButtonItem(title: "", style: .plain, target: self, action: nil)
-        navigationItem.backBarButtonItem?.tintColor = .systemBlue
+        navigationItem.backBarButtonItem?.tintColor = .label
         
         let left = UIBarButtonItem(title: "취소", style: .plain, target: self, action: #selector(cancelButtonClicked))
         navigationItem.leftBarButtonItem = left
-        navigationItem.leftBarButtonItem?.tintColor = .systemBlue
+        navigationItem.leftBarButtonItem?.tintColor = .label
         
         let rightBarButtonTitle = viewType == .add ? "추가" : "수정"
         let right = UIBarButtonItem(title: rightBarButtonTitle, style: .plain, target: self, action: #selector(addButtonClicked))
         navigationItem.rightBarButtonItem = right
-        navigationItem.rightBarButtonItem?.tintColor = .systemBlue
+        navigationItem.rightBarButtonItem?.tintColor = .label
         navigationItem.rightBarButtonItem?.isEnabled = false
     }
     

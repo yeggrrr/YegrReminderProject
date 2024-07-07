@@ -106,6 +106,9 @@ final class MainViewController: BaseViewController {
     override func configureUI() {
         view.backgroundColor = .systemBackground
         
+        navigationController?.navigationBar.tintColor = UIColor.label
+        navigationItem.backButtonTitle = ""
+        
         let left = UIBarButtonItem(image: UIImage(systemName: "calendar"), style: .plain, target: self, action: #selector(calendarButtonClicked))
         navigationItem.leftBarButtonItem = left
         navigationItem.leftBarButtonItem?.tintColor = .label
@@ -121,13 +124,13 @@ final class MainViewController: BaseViewController {
         var config = UIButton.Configuration.plain()
         config.title = "새로운 할 일"
         config.image = UIImage(systemName: "plus.circle.fill")
+        config.baseForegroundColor = .label
         config.imagePadding = 10
         newTodoButton.configuration = config
         newTodoButton.addTarget(self, action: #selector(newTodoButtonClicked), for: .touchUpInside)
         
         addListButton.setTitle("목록 추가", for: .normal)
-        addListButton.setTitleColor(UIColor.systemBlue, for: .normal)
-        addListButton.setTitleColor(UIColor.darkGray, for: .highlighted)
+        addListButton.setTitleColor(UIColor.label, for: .normal)
         addListButton.addTarget(self, action: #selector(addListButtonClicked), for: .touchUpInside)
     }
     
