@@ -59,65 +59,6 @@ final class ListViewController: BaseViewController {
         delegate?.updateListCount()
     }
     
-    func filterData() {
-        guard let listFilterType = listFilterType else { return }
-        
-        let objects = Array(realm.objects(TodoTable.self))
-        let todayText = DateFormatter.onlyDateFormatter.string(from: Date())
-        
-        switch listFilterType {
-        case .today:
-            filterList = objects.filter {
-                if let deadline = $0.deadline {
-                    let deadlineText = DateFormatter.onlyDateFormatter.string(from: deadline)
-                    return deadlineText == todayText
-                } else {
-                    return false
-                }
-            }
-        case .scheduled:
-            filterList = objects.filter {
-                if let deadline = $0.deadline {
-                    let deadlineText = DateFormatter.onlyDateFormatter.string(from: deadline)
-                    return deadlineText > todayText
-                } else {
-                    return false
-                }
-            }
-        case .entire:
-            filterList = objects
-        case .flag:
-            filterList = objects.filter { $0.flag }
-        case .complete:
-            filterList = objects.filter { $0.isDone }
-        }
-    }
-    
-    func detailFilterData(filterType: DetailFilterType) {
-        detailFilterType = filterType
-        
-        switch filterType {
-        case .closeToDeadline:
-            detailFilterList = filterList.sorted(by: { lhs, rhs in
-                let lhsDeadline = lhs.deadline ?? .distantFuture
-                let rhsDeadline = rhs.deadline ?? .distantFuture
-                return lhsDeadline < rhsDeadline
-            })
-        case .ascendingTitle:
-            detailFilterList = filterList.sorted(by: { lhs, rhs in
-                lhs.memoTitle < rhs.memoTitle
-            })
-        case .lowToHighPriority:
-            detailFilterList = filterList.sorted(by: { lhs, rhs in
-                let lhsPriority = lhs.priority ?? Priority.low.rawValue
-                let rhsPriority = rhs.priority ?? Priority.low.rawValue
-                return lhsPriority < rhsPriority
-            })
-        }
-        
-        listTableView.reloadData()
-    }
-    
     override func configureHierarchy() {
         view.addSubview(currentTitleLabel)
         view.addSubview(searchBar)
@@ -161,6 +102,106 @@ final class ListViewController: BaseViewController {
         listTableView.delegate = self
         listTableView.dataSource = self
         listTableView.register(ListTableViewCell.self, forCellReuseIdentifier: ListTableViewCell.id)
+    }
+    
+    func filterData() {
+        guard let listFilterType = listFilterType else { return }
+        
+        let objects = Array(realm.objects(TodoTable.self))
+        let todayText = DateFormatter.onlyDateFormatter.string(from: Date())
+        
+        switch listFilterType {
+        case .today:
+            filterList = objects.filter {
+                if let deadline = $0.deadline {
+                    let deadlineText = DateFormatter.onlyDateFormatter.string(from: deadline)
+                    return deadlineText == todayText
+                } else {
+                    return false
+                }
+            }
+        case .scheduled:
+            filterList = objects.filter {
+                if let deadline = $0.deadline {
+                    let deadlineText = DateFormatter.onlyDateFormatter.string(from: deadline)
+                    return deadlineText > todayText
+                } else {
+                    return false
+                }
+            }
+        case .entire:
+            filterList = objects
+        case .flag:
+            filterList = objects.filter { $0.flag }
+        case .complete:
+            filterList = objects.filter { $0.isDone }
+        }
+        
+        listTableView.reloadData()
+    }
+    
+    func filterSearchText(searchText: String) {
+        if searchText.isEmpty {
+            searchedList = []
+            navigationItem.rightBarButtonItem?.isEnabled = true
+        } else {
+            let data: [TodoTable] =
+            if detailFilterType == nil {
+                filterList
+            } else {
+                detailFilterList
+            }
+            
+            searchedList = data.filter {
+                let titleContains = $0.memoTitle.contains(searchText)
+                
+                if let content = $0.content {
+                    let contentContains = content.contains(searchText)
+                    return titleContains || contentContains
+                } else {
+                    return titleContains
+                }
+            }
+            navigationItem.rightBarButtonItem?.isEnabled = false
+        }
+        
+        listTableView.reloadData()
+    }
+    
+    func searchedData() {
+        let objects = realm.objects(TodoTable.self)
+        searchedList = searchedList.filter { todoTable in
+            objects.contains { object in
+                object == todoTable
+            }
+        }
+        
+        listTableView.reloadData()
+    }
+    
+    func detailFilterData(filterType: DetailFilterType) {
+        detailFilterType = filterType
+        
+        switch filterType {
+        case .closeToDeadline:
+            detailFilterList = filterList.sorted(by: { lhs, rhs in
+                let lhsDeadline = lhs.deadline ?? .distantFuture
+                let rhsDeadline = rhs.deadline ?? .distantFuture
+                return lhsDeadline < rhsDeadline
+            })
+        case .ascendingTitle:
+            detailFilterList = filterList.sorted(by: { lhs, rhs in
+                lhs.memoTitle < rhs.memoTitle
+            })
+        case .lowToHighPriority:
+            detailFilterList = filterList.sorted(by: { lhs, rhs in
+                let lhsPriority = lhs.priority ?? Priority.low.rawValue
+                let rhsPriority = rhs.priority ?? Priority.low.rawValue
+                return lhsPriority < rhsPriority
+            })
+        }
+        
+        listTableView.reloadData()
     }
     
     @objc func filterButtonClicked() {
@@ -288,23 +329,28 @@ extension ListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let delete = UIContextualAction(style: .normal, title: "삭제") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
-            try! self.realm.write {
-                if self.searchedList.isEmpty {
-                    let data = self.searchedList[indexPath.row]
-                    self.removeImageFromDocument(filename: "\(data.id)")
-                    self.realm.delete(self.searchedList[indexPath.row])
-                    self.listTableView.reloadData()
-                } else {
-                    let data = self.filterList[indexPath.row]
-                    self.removeImageFromDocument(filename: "\(data.id)")
-                    self.realm.delete(self.filterList[indexPath.row])
-                    self.listTableView.reloadData()
-                }
-            }
             
-            success(true)
+            do {
+                try self.realm.write {
+                    if self.searchedList.isEmpty {
+                        let data = self.filterList[indexPath.row]
+                        self.removeImageFromDocument(filename: "\(data.id)")
+                        self.realm.delete(self.filterList[indexPath.row])
+                        self.filterData()
+                    } else {
+                        let data = self.searchedList[indexPath.row]
+                        self.removeImageFromDocument(filename: "\(data.id)")
+                        self.realm.delete(self.searchedList[indexPath.row])
+                        self.searchedData()
+                    }
+                }
+                
+                success(true)
+            } catch {
+                print(error)
+            }
         }
-    
+        
         let edit = UIContextualAction(style: .normal, title: "편집") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
             print("편집 클릭 됨")
             success(true)
@@ -318,17 +364,31 @@ extension ListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let flag = UIContextualAction(style: .normal, title: "") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
-            let result = self.filterList[indexPath.row]
             
             do {
-                switch result.flag {
-                case true:
-                    try self.realm.write {
-                        result.setValue(false, forKey: "flag")
+                if self.searchedList.isEmpty {
+                    let filterResult = self.filterList[indexPath.row]
+                    switch filterResult.flag {
+                    case true:
+                        try self.realm.write {
+                            filterResult.setValue(false, forUndefinedKey: "flag")
+                        }
+                    case false:
+                        try self.realm.write {
+                            filterResult.setValue(true, forUndefinedKey: "flag")
+                        }
                     }
-                case false:
-                    try self.realm.write {
-                        result.setValue(true, forKey: "flag")
+                } else {
+                    let searchResult = self.searchedList[indexPath.row]
+                    switch searchResult.flag {
+                    case true:
+                        try self.realm.write {
+                            searchResult.setValue(false, forUndefinedKey: "flag")
+                        }
+                    case false:
+                        try self.realm.write {
+                            searchResult.setValue(true, forUndefinedKey: "flag")
+                        }
                     }
                 }
             } catch {
@@ -353,31 +413,7 @@ extension ListViewController: UITableViewDelegate {
 
 extension ListViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        if searchText.isEmpty {
-            searchedList = []
-            navigationItem.rightBarButtonItem?.isEnabled = true
-        } else {
-            let data: [TodoTable] =
-            if detailFilterType == nil {
-                filterList
-            } else {
-                detailFilterList
-            }
-            
-            searchedList = data.filter {
-                let titleContains = $0.memoTitle.contains(searchText)
-                
-                if let content = $0.content {
-                    let contentContains = content.contains(searchText)
-                    return titleContains || contentContains
-                } else {
-                    return titleContains
-                }
-            }
-            navigationItem.rightBarButtonItem?.isEnabled = false
-        }
-        
-        listTableView.reloadData()
+        filterSearchText(searchText: searchText)
     }
 }
 
