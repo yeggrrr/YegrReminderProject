@@ -107,7 +107,7 @@ final class ListViewController: BaseViewController {
     func filterData() {
         guard let listFilterType = listFilterType else { return }
         
-        let objects = Array(realm.objects(TodoTable.self))
+        let objects = TodoRepository.shared.fetch()
         let todayText = DateFormatter.onlyDateFormatter.string(from: Date())
         
         switch listFilterType {
@@ -169,7 +169,7 @@ final class ListViewController: BaseViewController {
     }
     
     func searchedData() {
-        let objects = realm.objects(TodoTable.self)
+        let objects = TodoRepository.shared.fetch()
         searchedList = searchedList.filter { todoTable in
             objects.contains { object in
                 object == todoTable
@@ -214,7 +214,7 @@ final class ListViewController: BaseViewController {
             self.detailFilterData(filterType: .ascendingTitle)
         }
         
-        let priority = UIAlertAction(title: "우선순위 낮은 순으로 보기", style: .default) { _ in
+        let priority = UIAlertAction(title: "우선순위 높은 순으로 보기", style: .default) { _ in
             self.detailFilterData(filterType: .lowToHighPriority)
         }
         
@@ -238,20 +238,7 @@ final class ListViewController: BaseViewController {
         let datas: [TodoTable] = detailFilterType == nil ? filterList : detailFilterList
         let result = datas[sender.tag]
         
-        do {
-            switch result.isDone {
-            case true:
-                try realm.write {
-                    result.setValue(false, forKey: "isDone")
-                }
-            case false:
-                try realm.write {
-                    result.setValue(true, forKey: "isDone")
-                }
-            }
-        } catch {
-            print(error)
-        }
+        TodoRepository.shared.setValue(result: result, key: "isDone")
         
         listTableView.reloadData()
     }
@@ -329,7 +316,6 @@ extension ListViewController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let delete = UIContextualAction(style: .normal, title: "삭제") { (UIContextualAction, UIView, success: @escaping (Bool) -> Void) in
-            
             do {
                 try self.realm.write {
                     if self.searchedList.isEmpty {

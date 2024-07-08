@@ -40,6 +40,7 @@
 		6872EAA12C3A1C6900267995 /* UIButton+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6872EAA02C3A1C6900267995 /* UIButton+.swift */; };
 		6872EAA42C3A1E9700267995 /* FSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 6872EAA32C3A1E9700267995 /* FSCalendar */; };
 		6872EAA62C3A3BFA00267995 /* TodoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6872EAA52C3A3BFA00267995 /* TodoTableViewCell.swift */; };
+		6872EAAF2C3BD05600267995 /* TodoRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6872EAAE2C3BD05600267995 /* TodoRepository.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -88,6 +89,7 @@
 		6872EA9E2C39964D00267995 /* CalendarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarViewController.swift; sourceTree = "<group>"; };
 		6872EAA02C3A1C6900267995 /* UIButton+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+.swift"; sourceTree = "<group>"; };
 		6872EAA52C3A3BFA00267995 /* TodoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoTableViewCell.swift; sourceTree = "<group>"; };
+		6872EAAE2C3BD05600267995 /* TodoRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoRepository.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -179,6 +181,7 @@
 			isa = PBXGroup;
 			children = (
 				686053402C344BD400D60EA0 /* TodoRealmModel.swift */,
+				6872EAAE2C3BD05600267995 /* TodoRepository.swift */,
 			);
 			path = Database;
 			sourceTree = "<group>";
@@ -353,6 +356,7 @@
 				6872EA692C34752100267995 /* PriorityViewController.swift in Sources */,
 				686053172C33E43C00D60EA0 /* SceneDelegate.swift in Sources */,
 				6872EA772C35615500267995 /* TagViewController.swift in Sources */,
+				6872EAAF2C3BD05600267995 /* TodoRepository.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

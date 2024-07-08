@@ -125,10 +125,7 @@ final class DetailViewController: BaseViewController {
     
     @objc func deleteButtonClicked() {
         guard let todo = todo else { return }
-        try! realm.write {
-            realm.delete(todo)
-        }
-        
+        TodoRepository.shared.delete(todo: todo)
         dismiss(animated: true)
     }
 }

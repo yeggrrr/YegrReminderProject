@@ -15,8 +15,8 @@ final class MainViewController: BaseViewController {
     private let newTodoButton = UIButton()
     private let addListButton = UIButton()
     
-    private let realm = try! Realm()
-    private var list: Results<TodoTable>!
+    let todoList: [TodoTable] = []
+    
     private var totalCount: Int = 0
     
     let buttonList: [ListFilterType] = [.today, .scheduled, .entire, .flag, .complete]
@@ -154,7 +154,7 @@ final class MainViewController: BaseViewController {
     }
     
     func updateCount() {
-        let array = Array(self.realm.objects(TodoTable.self))
+        let array = TodoRepository.shared.fetch()
         let todayText = DateFormatter.onlyDateFormatter.string(from: Date())
         
         todayList = array.filter {
@@ -175,7 +175,7 @@ final class MainViewController: BaseViewController {
             }
         }
         
-        totalList = Array(self.realm.objects(TodoTable.self))
+        totalList = TodoRepository.shared.fetch()
         flagList = array.filter { $0.flag }
         completeList = array.filter { $0.isDone }
         

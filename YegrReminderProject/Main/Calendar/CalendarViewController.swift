@@ -15,7 +15,6 @@ class CalendarViewController: UIViewController {
     private let calendar = FSCalendar(frame: CGRect(x: 0, y: 0, width: 320, height: 300))
     private let dropDownButton = UIButton()
     private let todotableView = UITableView()
-    private let realm = try! Realm()
     
     private var targetDateList: [TodoTable] = []
     private var events: [String] = []
@@ -120,7 +119,7 @@ class CalendarViewController: UIViewController {
     
     func fetchTargetDateList(date: Date) {
         let targetDateText = DateFormatter.onlyDateFormatter.string(from: date)
-        let objects = Array(realm.objects(TodoTable.self))
+        let objects = TodoRepository.shared.fetch()
         targetDateList = objects.filter { todoTable in
             if let deadline = todoTable.deadline {
                 let deadlineText = DateFormatter.onlyDateFormatter.string(from: deadline)
@@ -146,7 +145,7 @@ class CalendarViewController: UIViewController {
     }
 }
 
-extension CalendarViewController: FSCalendarDelegate, FSCalendarDataSource, FSCalendarDelegateAppearance {
+extension CalendarViewController: FSCalendarDelegate, FSCalendarDataSource {
     func calendar(_ calendar: FSCalendar, boundingRectWillChange bounds: CGRect, animated: Bool) {
         calendar.snp.updateConstraints {
             $0.height.equalTo(bounds.height)
