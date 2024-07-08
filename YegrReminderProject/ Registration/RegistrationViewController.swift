@@ -111,7 +111,12 @@ final class RegistrationViewController: BaseViewController {
         let right = UIBarButtonItem(title: rightBarButtonTitle, style: .plain, target: self, action: #selector(addButtonClicked))
         navigationItem.rightBarButtonItem = right
         navigationItem.rightBarButtonItem?.tintColor = .label
-        navigationItem.rightBarButtonItem?.isEnabled = false
+        switch viewType {
+        case .add:
+            navigationItem.rightBarButtonItem?.isEnabled = false
+        case .update:
+            navigationItem.rightBarButtonItem?.isEnabled = true
+        }
     }
     
     private func configureTableView() {
