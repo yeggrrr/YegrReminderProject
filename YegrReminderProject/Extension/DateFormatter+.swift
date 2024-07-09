@@ -21,4 +21,11 @@ extension DateFormatter {
         dateFormat.dateFormat = "yyyyMMdd"
         return dateFormat
     }()
+    
+    static let koreanDateFormatter: DateFormatter = {
+        let dateFormat = DateFormatter()
+        dateFormat.locale = Locale(identifier: "ko_KR")
+        dateFormat.dateFormat = "yyyy년 MM월 dd일 E요일"
+        return dateFormat
+    }()
 }

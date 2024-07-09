@@ -9,7 +9,10 @@ import UIKit
 import SnapKit
 
 final class DeadlineViewController:  BaseViewController {
+    let deadlinViewModel = DeadlineViewModel()
+    
     private let deadlineDatePicker = UIDatePicker()
+    private let dateLabel = UILabel()
     
     var selectedDate: Date?
     weak var delegate: UpdateDeadlineDelegate?
@@ -18,6 +21,7 @@ final class DeadlineViewController:  BaseViewController {
         super.viewDidLoad()
         
         getSelectedDate()
+        bindData()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -26,8 +30,15 @@ final class DeadlineViewController:  BaseViewController {
         delegate?.updateDeadlineAfterDismiss(date: deadlineDatePicker.date)
     }
     
+    func bindData() {
+        deadlinViewModel.outputDateText.bind { date in
+            self.dateLabel.text = date
+        }
+    }
+    
     override func configureHierarchy() {
         view.addSubview(deadlineDatePicker)
+        view.addSubview(dateLabel)
     }
     
     override func configureLayout() {
@@ -35,6 +46,11 @@ final class DeadlineViewController:  BaseViewController {
         
         deadlineDatePicker.snp.makeConstraints {
             $0.top.equalTo(safeArea).offset(20)
+            $0.centerX.equalTo(safeArea.snp.centerX)
+        }
+        
+        dateLabel.snp.makeConstraints {
+            $0.top.equalTo(deadlineDatePicker.snp.bottom).offset(20)
             $0.centerX.equalTo(safeArea.snp.centerX)
         }
     }
@@ -49,12 +65,20 @@ final class DeadlineViewController:  BaseViewController {
         deadlineDatePicker.backgroundColor = .systemGray5
         deadlineDatePicker.layer.cornerRadius = 10
         deadlineDatePicker.clipsToBounds = true
+        deadlineDatePicker.addTarget(self, action: #selector(dateSelected(_:)), for: .valueChanged)
+        
+        dateLabel.setUI(txtColor: .label, fontStyle: .systemFont(ofSize: 15, weight: .regular), txtAlignment: .center)
     }
     
     private func getSelectedDate() {
         if let selectedDate = selectedDate {
             deadlineDatePicker.date = selectedDate
         }
+    }
+    
+    @objc func dateSelected(_ sender: UIDatePicker) {
+        let selectedDate = DateFormatter.koreanDateFormatter.string(from: sender.date)
+        deadlinViewModel.inputDateText.value = selectedDate
     }
 }
 
