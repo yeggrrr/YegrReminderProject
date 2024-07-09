@@ -11,9 +11,16 @@ class DeadlineViewModel {
     var inputDateText: Observable<String?> = Observable("")
     var outputDateText = Observable("")
     
+    var inputViewDidLoadTrigger: Observable<Void?> = Observable(nil)
+    
     init() {
         inputDateText.bind { _ in
             self.selectedDate()
+        }
+        
+        inputViewDidLoadTrigger.bind { date in
+            let todayDate = DateFormatter.koreanDateFormatter.string(from: Date())
+            self.outputDateText.value = todayDate
         }
     }
     
