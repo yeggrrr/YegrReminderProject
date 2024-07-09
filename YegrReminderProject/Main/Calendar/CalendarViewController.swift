@@ -43,6 +43,7 @@ class CalendarViewController: UIViewController {
         configureHierarchy()
         configureLayout()
         configureUI()
+        fetchTargetDateList(date: Date())
     }
     
     func configureObjects() {
@@ -95,6 +96,7 @@ class CalendarViewController: UIViewController {
         self.todoCalendar = calendar
         todoCalendar.scrollDirection = .horizontal
         todoCalendar.scrollEnabled = true
+        todoCalendar.select(Date())
         
         todoCalendar.headerHeight = 60
         todoCalendar.appearance.headerDateFormat = "YYYY년 MM월"
@@ -109,6 +111,7 @@ class CalendarViewController: UIViewController {
         todoCalendar.appearance.titleTodayColor = .black
         todoCalendar.appearance.todayColor = UIColor.white
         todoCalendar.scope = .week
+        
         // dropDownButton
         dropDownButton.setImage(UIImage(systemName: "chevron.down"), for: .normal)
         dropDownButton.tintColor = .label
