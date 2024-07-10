@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		680082682C3D71C400ADD884 /* DeadlineViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 680082672C3D71C400ADD884 /* DeadlineViewModel.swift */; };
 		6800826B2C3D721800ADD884 /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6800826A2C3D721800ADD884 /* Observable.swift */; };
+		680082A82C3E774B00ADD884 /* TagViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 680082A72C3E774B00ADD884 /* TagViewModel.swift */; };
 		686053152C33E43C00D60EA0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 686053142C33E43C00D60EA0 /* AppDelegate.swift */; };
 		686053172C33E43C00D60EA0 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 686053162C33E43C00D60EA0 /* SceneDelegate.swift */; };
 		686053192C33E43C00D60EA0 /* ListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 686053182C33E43C00D60EA0 /* ListViewController.swift */; };
@@ -62,6 +63,7 @@
 /* Begin PBXFileReference section */
 		680082672C3D71C400ADD884 /* DeadlineViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeadlineViewModel.swift; sourceTree = "<group>"; };
 		6800826A2C3D721800ADD884 /* Observable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
+		680082A72C3E774B00ADD884 /* TagViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagViewModel.swift; sourceTree = "<group>"; };
 		686053112C33E43C00D60EA0 /* YegrReminderProject.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = YegrReminderProject.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		686053142C33E43C00D60EA0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		686053162C33E43C00D60EA0 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -138,11 +140,11 @@
 		686053132C33E43C00D60EA0 /* YegrReminderProject */ = {
 			isa = PBXGroup;
 			children = (
-				680082692C3D71FF00ADD884 /* Observable */,
 				686053142C33E43C00D60EA0 /* AppDelegate.swift */,
 				686053162C33E43C00D60EA0 /* SceneDelegate.swift */,
 				6860531D2C33E43E00D60EA0 /* Assets.xcassets */,
 				6860531F2C33E43E00D60EA0 /* LaunchScreen.storyboard */,
+				680082692C3D71FF00ADD884 /* Observable */,
 				6860533F2C344BB300D60EA0 /* Database */,
 				6860532D2C33EC6A00D60EA0 /* Extension */,
 				6872EA882C37CBC000267995 /* Base */,
@@ -202,8 +204,8 @@
 		6872EA662C3474F000267995 /* DeadlineVC */ = {
 			isa = PBXGroup;
 			children = (
-				6872EA6C2C3478D100267995 /* DeadlineViewController.swift */,
 				680082672C3D71C400ADD884 /* DeadlineViewModel.swift */,
+				6872EA6C2C3478D100267995 /* DeadlineViewController.swift */,
 			);
 			path = DeadlineVC;
 			sourceTree = "<group>";
@@ -219,6 +221,7 @@
 		6872EA6A2C34783B00267995 /* TagVC */ = {
 			isa = PBXGroup;
 			children = (
+				680082A72C3E774B00ADD884 /* TagViewModel.swift */,
 				6872EA762C35615500267995 /* TagViewController.swift */,
 			);
 			path = TagVC;
@@ -349,6 +352,7 @@
 				686053412C344BD400D60EA0 /* TodoRealmModel.swift in Sources */,
 				6872EA7E2C356D6000267995 /* DetailView.swift in Sources */,
 				686053192C33E43C00D60EA0 /* ListViewController.swift in Sources */,
+				680082A82C3E774B00ADD884 /* TagViewModel.swift in Sources */,
 				6872EA8E2C37CE1000267995 /* BaseTableViewCell.swift in Sources */,
 				6872EA8A2C37CBD200267995 /* BaseViewController.swift in Sources */,
 				6872EAA62C3A3BFA00267995 /* TodoTableViewCell.swift in Sources */,
