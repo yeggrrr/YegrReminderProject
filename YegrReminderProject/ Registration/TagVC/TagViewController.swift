@@ -30,6 +30,13 @@ final class TagViewController: BaseViewController {
         delegate?.updateTagAfterDismiss(tag: tagText)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        guard let currentTag = inputTag else { return }
+        tagLabel.text = "# \(currentTag)"
+    }
+    
     override func configureHierarchy() {
         view.addSubview(tagTextField)
         view.addSubview(tagLabel)
