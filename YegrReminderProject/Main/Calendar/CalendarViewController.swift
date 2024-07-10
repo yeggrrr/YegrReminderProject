@@ -11,15 +11,16 @@ import SnapKit
 import RealmSwift
 
 class CalendarViewController: UIViewController {
+    private let calendarViewModel = CalendarViewModel()
+    
     fileprivate weak var todoCalendar: FSCalendar!
+    
     private let calendar = FSCalendar(frame: CGRect(x: 0, y: 0, width: 320, height: 300))
     private let dropDownButton = UIButton()
     private let todotableView = UITableView()
     
-    private var targetDateList: [TodoTable] = []
     private var events: [String] = []
     private var eventsDate: [Date] = []
-    
     private var dropDownState = false
     
     enum DropDownState {
@@ -43,7 +44,6 @@ class CalendarViewController: UIViewController {
         configureHierarchy()
         configureLayout()
         configureUI()
-        fetchTargetDateList(date: Date())
     }
     
     func configureObjects() {
@@ -120,19 +120,10 @@ class CalendarViewController: UIViewController {
         todotableView.backgroundColor = .systemBackground
     }
     
-    func fetchTargetDateList(date: Date) {
-        let targetDateText = DateFormatter.onlyDateFormatter.string(from: date)
-        let objects = TodoRepository.shared.fetch()
-        targetDateList = objects.filter { todoTable in
-            if let deadline = todoTable.deadline {
-                let deadlineText = DateFormatter.onlyDateFormatter.string(from: deadline)
-                return deadlineText == targetDateText
-            }
-            
-            return false
+    func bindTodoData() {
+        calendarViewModel.targetDateList.bind { _ in
+            self.todotableView.reloadData()
         }
-        
-        todotableView.reloadData()
     }
     
     @objc func underDropButtonClicked() {
@@ -166,7 +157,8 @@ extension CalendarViewController: FSCalendarDelegate, FSCalendarDataSource {
     }
     
     func calendar(_ calendar: FSCalendar, didSelect date: Date, at monthPosition: FSCalendarMonthPosition) {
-        fetchTargetDateList(date: date)
+        calendarViewModel.inputSelectedDate.value = date
+        bindTodoData()
     }
 }
 
@@ -176,12 +168,12 @@ extension CalendarViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return targetDateList.count
+        return calendarViewModel.targetDateList.value.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: TodoTableViewCell.id, for: indexPath) as? TodoTableViewCell else { return UITableViewCell() }
-        let item = targetDateList[indexPath.row]
+        let item = calendarViewModel.targetDateList.value[indexPath.row]
         cell.titleLabel.text = item.memoTitle
         cell.memoLabel.text = item.content
         cell.selectionStyle = .none
